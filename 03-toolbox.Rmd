@@ -270,17 +270,17 @@ autoplot(dj2) + xlab("Day") + ylab("") +
   ggtitle("Dow Jones Index (daily ending 15 Jul 94)")
 ```
 
-```{r DJresid, fig.cap="Residuals from forecasting the Dow Jones Index using the naïve method.", warning=FALSE}
+```{r DJresid, fig.cap="Residuals from forecasting the Dow Jones Index using the naïve method.", warning=FALSE, dependson="DJautoplot"}
 res <- residuals(naive(dj2))
 autoplot(res) + xlab("Day") + ylab("") +
   ggtitle("Residuals from naïve method")
 ```
 
-```{r DJhist, fig.cap="Histogram of the residuals from the naïve method applied to the Dow Jones Index. The left tail is a little too long for a normal distribution.", warning=FALSE, message=FALSE}
+```{r DJhist, fig.cap="Histogram of the residuals from the naïve method applied to the Dow Jones Index. The left tail is a little too long for a normal distribution.", warning=FALSE, message=FALSE, dependson="DJresid"}
 gghistogram(res) + ggtitle("Histogram of residuals")
 ```
 
-```{r DJacf, fig.cap="ACF of the residuals from the naïve method applied to the Dow Jones Index. The lack of correlation suggesting the forecasts are good.", fig.asp=0.35}
+```{r DJacf, fig.cap="ACF of the residuals from the naïve method applied to the Dow Jones Index. The lack of correlation suggesting the forecasts are good.", fig.asp=0.35, dependson="DJresid"}
 ggAcf(res) + ggtitle("ACF of residuals")
 ```
 
@@ -311,7 +311,7 @@ How large is too large? If the autocorrelations did come from a white noise seri
 
 For the Dow-Jones example, the naïve model has no parameters, so $K=0$ in that case also.
 
-```{r Boxtest}
+```{r Boxtest, dependson="DJresid"}
 # lag=h and fitdf=K
 Box.test(res, lag=10, fitdf=0)
 
@@ -322,7 +322,7 @@ For both $Q$ and $Q^*$, the results are not significant (i.e., the $p$-values ar
 
 All of these methods for checking residuals are conveniently packaged into one R function, which will produce a time plot, ACF plot and histogram of the residuals (with an overlayed normal distribution for comparison), and do a Ljung-Box test with the correct degrees of freedom:
 
-```{r checkresiduals, warning=FALSE}
+```{r checkresiduals, warning=FALSE, dependson="DJautoplot"}
 checkresiduals(naive(dj2))
 ```
 
@@ -468,7 +468,6 @@ autoplot(window(ausbeer, start=1992)) +
 
 Figure \@ref(fig:beeraccuracy) shows three forecast methods applied to the quarterly Australian beer production using data only to the end of 2007. The actual values for the period 2008--2010 are also shown. We compute the forecast accuracy measures for this period.
 
-
 ```r
 beer3 <- window(ausbeer, start=2008)
 accuracy(beerfit1, beer3)
@@ -476,7 +475,7 @@ accuracy(beerfit2, beer3)
 accuracy(beerfit3, beer3)
 ```
 
-```{r beeraccuracytable, echo=FALSE}
+```{r beeraccuracytable, echo=FALSE, dependson="beeraccuracy"}
 beer3 <- window(ausbeer, start=2008)
 tab <- matrix(NA,ncol=4,nrow=3)
 tab[1,] <- accuracy(beerfit1, beer3)[2,c(2,3,5,6)]
@@ -512,7 +511,7 @@ accuracy(djfc2, dj3)
 accuracy(djfc3, dj3)
 ```
 
-```{r djaccuracytable, echo=FALSE}
+```{r djaccuracytable, echo=FALSE, dependson="djfc"}
 dj3 <- window(dj, start=251)
 tab <- matrix(NA,ncol=4,nrow=3)
 tab[1,] <- accuracy(djfc1, dj3)[2,c(2,3,5,6)]
@@ -653,7 +652,7 @@ The value of prediction intervals is that they express the uncertainty in the fo
 
 When forecasting one step ahead, the standard deviation of the forecast distribution is almost the same as the standard deviation of the residuals. (In fact, the two standard deviations are identical if there are no parameters to be estimated, as is the case with the naïve method. For forecasting methods involving parameters to be estimated, the standard deviation of the forecast distribution is slightly larger than the residual standard deviation, although this difference is often ignored.)
 
-```{r djpi, echo=FALSE}
+```{r djpi, echo=FALSE, dependson="DJresid"}
 djsd <- sqrt(mean(res^2, na.rm=TRUE))
 djf <- tail(dj2,1)
 mult <- -qnorm(.5-c(80,95)/200)
@@ -697,13 +696,13 @@ Note that when $h=1$ and $T$ is large, these all give the same approximate value
 
 Prediction intervals will be computed for you when using any of the benchmark forecasting methods. For example, here is the output when using the naïve method for the Dow-Jones index.
 
-```{r djforecasts, echo=TRUE}
+```{r djforecasts, echo=TRUE, dependson="DJautoplot"}
 naive(dj2)
 ```
 
 When plotted, the prediction intervals are shown as shaded region, with the strength of colour indicating the probability associated with the interval.
 
-```{r djforecasts2, echo=TRUE}
+```{r djforecasts2, echo=TRUE, dependson="DJautoplot"}
 autoplot(naive(dj2))
 ```
 
@@ -729,7 +728,7 @@ Doing this repeatedly, we obtain many possible futures. Then we can compute pred
 
 To generate such intervals, we can simply add the `bootstrap` argument to our forecasting functions. For example:
 
-```{r djforecastsboot, echo=TRUE}
+```{r djforecastsboot, echo=TRUE, dependson="DJautoplot"}
 naive(dj2, bootstrap=TRUE)
 ```
 

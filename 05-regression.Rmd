@@ -182,7 +182,7 @@ Plugging in the values of $x_{1,t},\ldots,x_{k,t}$ for $t=1,\ldots,T$ returns pr
 The following plots show the actual values compared to the fitted values for the percentage change in the US consumption expenditure series. The time plot in Figure \@ref(fig:usfitted1) shows that the fitted values follow the actual data fairly closely. This is verified by the strong positive relationship shown by the scatterplot in Figure \@ref(fig:usfitted2).
 
 
-```{r usfitted1, echo=TRUE, fig.cap="Time plot of US consumption expenditure and predicted expenditure."}
+```{r usfitted1, echo=TRUE, fig.cap="Time plot of US consumption expenditure and predicted expenditure.", dependson="usestim"}
 autoplot(uschange[,'Consumption'], series="Data") +
   forecast::autolayer(fitted(fit.consMR), series="Fitted") +
   xlab("Year") + ylab("") +
@@ -190,7 +190,7 @@ autoplot(uschange[,'Consumption'], series="Data") +
   guides(colour=guide_legend(title=" "))
 ```
 
-```{r usfitted2, echo=TRUE, fig.cap="Actual US consumption expenditure plotted against predicted US consumption expenditure.", message=FALSE, warning=FALSE}
+```{r usfitted2, echo=TRUE, fig.cap="Actual US consumption expenditure plotted against predicted US consumption expenditure.", message=FALSE, warning=FALSE, dependson="usestim"}
 cbind(Data=uschange[,"Consumption"], Fitted=fitted(fit.consMR)) %>%
   as.data.frame() %>%
   ggplot(aes(x=Data, y=Fitted)) +
@@ -261,7 +261,7 @@ We want to forecast the value of future beer production. We can model this data 
 \]
 where $d_{i,t} = 1$ if $t$ is in quarter $i$ and 0 otherwise. The first quarter variable has been omitted, so the coefficients associated with the other quarters are measures of the difference between those quarters and the first quarter.
 
-```{r fig.beerfit, echo=TRUE}
+```{r fig.beerfit, echo=TRUE, dependson="beeragain"}
 fit.beer <- tslm(beer2 ~ trend + season)
 summary(fit.beer)
 ```
@@ -271,14 +271,14 @@ Note that `trend` and `season` are not objects in the R workspace; they are crea
 There is a downward trend of `r round(fit.beer$coef['trend'], 3)` megalitres per quarter. On average, the second quarter has production of `r -round(fit.beer$coef['season2'], 1)` megalitres lower than the first quarter, the third quarter has production of `r -round(fit.beer$coef['season3'], 1)` megalitres lower than the first quarter, and the fourth quarter has production of `r round(fit.beer$coef['season4'], 1)` megalitres higher than the first quarter.
 
 
-```{r beerlm2, echo=TRUE, fig.cap="Time plot of beer production and predicted beer production."}
+```{r beerlm2, echo=TRUE, fig.cap="Time plot of beer production and predicted beer production.", dependson="fig.beerfit"}
 autoplot(beer2, series="Data") +
   forecast::autolayer(fitted(fit.beer), series="Fitted") +
   xlab("Year") + ylab("Megalitres") +
   ggtitle("Quarterly Beer Production")
 ```
 
-```{r beerlm3, echo=TRUE, fig.cap="Actual beer production plotted against predicted beer production."}
+```{r beerlm3, echo=TRUE, fig.cap="Actual beer production plotted against predicted beer production.", dependson="fig.beerfit"}
 cbind(Data=beer2, Fitted=fitted(fit.beer)) %>%
   as.data.frame() %>%
   ggplot(aes(x=Data, y=Fitted, colour=as.factor(cycle(beer2)))) +
@@ -308,7 +308,7 @@ The advantage of using Fourier terms is that we can often use fewer predictor va
 
 In R, these Fourier terms are produced using the `fourier` function. For example, the Australian beer data can be modelled like this.
 
-```{r fourierbeer, echo=TRUE}
+```{r fourierbeer, echo=TRUE, dependson="beeragain"}
 fourier.beer <- tslm(beer2 ~ trend + fourier(beer2, K=2))
 summary(fourier.beer)
 ```
@@ -403,7 +403,7 @@ The remaining residuals show that the model has captured the patterns in the dat
 
 The histogram shows that the residuals from modelling the beer data seem to be slightly negatively skewed, although that is due to the large negative value in 2004 Q4.
 
-```{r beerresidcheck, echo=TRUE, fig.cap="Analysing the residuals from a regression model for beer production.", message=FALSE, warning=FALSE}
+```{r beerresidcheck, echo=TRUE, fig.cap="Analysing the residuals from a regression model for beer production.", message=FALSE, warning=FALSE, dependson="fig.beerfit"}
 checkresiduals(fit.beer)
 ```
 
@@ -513,7 +513,7 @@ fit.consMR <- tslm(Consumption ~ Income + Production + Unemployment + Savings,
 summary(fit.consMR)
 ```
 
-```{r corfitconsMR, echo=FALSE}
+```{r corfitconsMR, echo=FALSE, dependson="fitconsMR"}
 r <- cor(fit.consMR$fitted.values,uschange[,"Consumption"])
 ```
 
@@ -559,7 +559,7 @@ Regressing non-stationary time series can lead to spurious regressions. The outp
 Cases of spurious regression might appear to give reasonable short-term forecasts, but they will generally not continue to work into the future.
 
 
-```{r tslmspurious, fig.cap="Residuals from a spurious regression.", echo=TRUE}
+```{r tslmspurious, fig.cap="Residuals from a spurious regression.", echo=TRUE, dependson="spurious"}
 fit <- tslm(aussies ~ guinearice)
 summary(fit)
 checkresiduals(fit)
@@ -995,7 +995,7 @@ autoplot(marathon) +
 
 Figure \@ref(fig:marathonNonlinear) above shows the fitted lines and forecasts from linear, exponential and piecewise linear trends. The piecewise linear trend fits the data better than both the exponential and linear trends and seems to return sensible forecasts. The residuals plotted in Figure \@ref(fig:residPiecewise) show that the model has mostly captured the trend well although there is some autocorrelation remaining (we will deal with this in Chapter \@ref(advanced)). We should however again warn here that the projection forward from the piecewise linear trend can be very sensitive to the choice of location of the knots, especially the ones located towards the end of the sample. For example moving the knot placed at 1980 even five years forward will reveal very different forecasts. The wide prediction interval associated with the forecasts form the piecewise linear trend reflects the volatility observed in the historical winning times.
 
-```{r residPiecewise, fig.cap="Residuals from the piecewise trend.",  message=FALSE, warning=FALSE}
+```{r residPiecewise, fig.cap="Residuals from the piecewise trend.",  message=FALSE, warning=FALSE, dependson="marathonNonlinear"}
 checkresiduals(fit.pw)
 ```
 
