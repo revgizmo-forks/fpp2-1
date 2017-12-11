@@ -94,14 +94,14 @@ ol {
 
 .book .book-summary ul.summary li a {
   padding: 5px 5px 5px 5px;
-  color: #aaa;
+  color: #ddd;
 }
 
 .book .book-summary ul.summary li.active>a {
-  color: #ffffff;
+  color: #edb621;
 }
 
 .book .book-summary ul.summary li a:hover {
-  background-color: #99afc4;
+  background-color: #aaaaaa;
   color: #3b556e;
 }
