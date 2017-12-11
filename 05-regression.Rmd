@@ -112,7 +112,7 @@ autoplot(uschange[,3:5], facets = TRUE, colour=TRUE) +
   guides(colour="none")
 ```
 
-The first column of Figure \@ref(fig:ScatterMatrix) below shows the relationships between consumption and each of the predictors. The scatterplots show positive relationships with income and industrial production, and negative relationships with savings and unemployment. The strength of these relationships are shown by the correlation coefficients across the first row. The remaining scatterplots and correlation coefficients show the relationships between the predictors.
+The first column of Figure \@ref(fig:ScatterMatrix) shows the relationships between consumption and each of the predictors. The scatterplots show positive relationships with income and industrial production, and negative relationships with savings and unemployment. The strength of these relationships are shown by the correlation coefficients across the first row. The remaining scatterplots and correlation coefficients show the relationships between the predictors.
 
 ```{r ScatterMatrix, echo=TRUE, fig.cap="A scatterplot matrix of US consumption expenditure and the four predictors.", fig.asp=1}
 uschange %>%
@@ -248,7 +248,7 @@ The `tslm` function will automatically handle this situation if you specify the 
 
 #### Example: Australian quarterly beer production {-}
 
-Recall the Australian quarterly beer production data shown again in Figure \@ref(fig:beeragain) below.
+Recall the Australian quarterly beer production data shown again in Figure \@ref(fig:beeragain).
 
 ```{r beeragain, echo=TRUE, fig.cap="Australian quarterly beer production."}
 beer2 <- window(ausbeer, start=1992)
@@ -432,6 +432,7 @@ gridExtra::grid.arrange(p1, p2, p3, p4, nrow=2)
 A plot of the residuals against the fitted values should also show no pattern. If a pattern is observed, there may be "heteroscedasticity" in the errors which means that the variance of the residuals may not be constant. If this problem occurs, a transformation of the forecast variable (such as a logarithm or square root) may be required.
 
 #### Example {-}
+
 Figure \@ref(fig:electrendseas) shows the residuals against the fitted values from fitting a linear trend and seasonal dummies to the electricity data we first encountered in Section \@ref(sec-transformations). The plot shows that the trend in the data is nonlinear and that the forecast variable requires a transformation as we observe a heteroscedastic pattern with variation increasing along the x-axis.
 
 
@@ -440,10 +441,13 @@ fit <- tslm(elec ~ trend + season)
 cbind(Fitted=fitted(fit), Residuals=residuals(fit)) %>%
   as.data.frame() %>%
   ggplot(aes(x=Fitted, y=Residuals)) + geom_point()
-##TODO
+```
+
+<!-- 
+##TODO???
 ## A little too obvious. Can we find something more subtle?
 ## George: Will try to
-```
+ -->
 
 ### Outliers and influential observations {-}
 
@@ -534,7 +538,7 @@ We should warn here that the evaluation of the standard error can be highly subj
 
 More often than not, time series data are "non-stationary"; that is, the values of the time series do not fluctuate around a constant mean or with a constant variance. We will deal with time series stationarity in more detail in Chapter \@ref(ch-arima), but here we need to address the effect that non-stationary data can have on regression models.
 
-For example consider the two variables plotted below in Figure \@ref(fig:spurious). These appear to be related simply because they both trend upwards in the same manner. However, air passenger traffic in Australia has nothing to do with rice production in Guinea.
+For example consider the two variables plotted in Figure \@ref(fig:spurious). These appear to be related simply because they both trend upwards in the same manner. However, air passenger traffic in Australia has nothing to do with rice production in Guinea.
 
 
 ```{r spurious, echo=FALSE, fig.asp=0.6, warning=FALSE, fig.cap="Trending time series data can appear to be related as shown in this example in which air passengers in Australia are regressed against rice production in Guinea.", message=FALSE}
@@ -550,7 +554,7 @@ p3 <- cbind(guinearice, aussies) %>%
 gridExtra::grid.arrange(gridExtra::arrangeGrob(p1, p2),p3, ncol = 2)
 ```
 
-Regressing non-stationary time series can lead to spurious regressions. The output of regressing Australian air passengers on rice production in Guinea is shown below. High $R^2$ and high residual autocorrelation can be signs of spurious regression. We discuss the issues surrounding non-stationary data and spurious regressions in more detail in Chapter \@ref(ch-dynamic).
+Regressing non-stationary time series can lead to spurious regressions. The output of regressing Australian air passengers on rice production in Guinea is shown in Figure \@ref(fig:tslmspurious). High $R^2$ and high residual autocorrelation can be signs of spurious regression. We discuss the issues surrounding non-stationary data and spurious regressions in more detail in Chapter \@ref(ch-dynamic).
 
 Cases of spurious regression might appear to give reasonable short-term forecasts, but they will generally not continue to work into the future.
 
@@ -635,7 +639,7 @@ Many statisticians like to use BIC because it has the feature that if there is a
 
 #### Example: US consumption {-}
 
-To obtain all these measures in R, use `CV(fit)`. In the multiple regression example for forecasting US consumption we considered four predictors. With four predictors, there are $2^4=16$ possible models. Now we can check if all four predictors are actually useful, or whether we can drop one or more of them. All 16 models were fitted and the results are summarised below in Table \@ref(tab:tblusMR). A "1" indicates that the predictor was included in the model, and a "0" means that the predictor was not included in the model. Hence the first row shows the measures of predictive accuracy for a model including all four predictors.
+To obtain all these measures in R, use `CV(fit)`. In the multiple regression example for forecasting US consumption we considered four predictors. With four predictors, there are $2^4=16$ possible models. Now we can check if all four predictors are actually useful, or whether we can drop one or more of them. All 16 models were fitted and the results are summarised in Table \@ref(tab:tblusMR). A "1" indicates that the predictor was included in the model, and a "0" means that the predictor was not included in the model. Hence the first row shows the measures of predictive accuracy for a model including all four predictors.
 
 The results have been sorted according to the AICc and therefore the best models are given at the top of the table, and the worst at the bottom of the table.
 
@@ -783,8 +787,8 @@ Assuming that the regression errors are normally distributed, an approximate 95%
 where $T$ is the total number of observations, $\bar{x}$ is the mean of the observed $x$ values, $s_x$ is the standard deviation of the observed $x$ values and $\hat{\sigma}_e$ is the standard error of the regression given by Equation \@ref(eq:Regr-se). Similarly, an 80% prediction interval can be obtained by replacing 1.96 by 1.28. Other prediction intervals can be obtained by replacing the 1.96 with the appropriate value given in Table \@ref(tab:pcmultipliers). If R is used to obtain prediction intervals, more exact calculations are obtained (especially for small values of $T$) than what is given by Equation \@ref(eq:Regr-pi).
 
 Equation \@ref(eq:Regr-pi) shows that the prediction interval is wider when $x$ is far from $\bar{x}$. That is,  we are more certain about our forecasts when considering values of the predictor variable close to its sample mean.
+
 #### Example {-}
-`TODO: This is to higligh the extreme case. If not useful just remove`.
 
 The estimated simple regression line in the US consumption example is
 \[ \hat{y}_t=`r round(coef(fit.cons)[1],2)` + `r round(coef(fit.cons)[2],2)`x_t.
@@ -800,7 +804,7 @@ fcast.up$mean[1]
 ```
 
 Assuming that for the next four quarters personal income will increase by its historical mean value of $\bar{x}=`r round(mean(uschange[,"Income"]),2)`\%$, consumption is forecast to increase by $`r round(fcast.up$mean[1],2)`\%$ and
-the corresponding $95\%$ and $80\%$ prediction intervals are $[`r round(fcast.up$lower[1,2],2)`,`r round(fcast.up$upper[1,2],2)`]$ and $[`r round(fcast.up$lower[1,1],2)`,`r round(fcast.up$upper[1,1],2)`]$ respectively (calcualted using R). If we assume an extreme increase of $10\%$ in income then the prediction intervals are considerably wider as shown in Figure \@ref(fig:conSimplePI).
+the corresponding $95\%$ and $80\%$ prediction intervals are $[`r round(fcast.up$lower[1,2],2)`,`r round(fcast.up$upper[1,2],2)`]$ and $[`r round(fcast.up$lower[1,1],2)`,`r round(fcast.up$upper[1,1],2)`]$ respectively (calculated using R). If we assume an extreme increase of $10\%$ in income then the prediction intervals are considerably wider as shown in Figure \@ref(fig:conSimplePI).
 
 ```{r conSimplePI, echo=FALSE, fig.cap="Prediction intervals if income is increased by its historical mean versus an extreme increase of 10%.", echo=TRUE}
 autoplot(uschange[,"Consumption"]) +
@@ -878,15 +882,15 @@ be too narrow.
 
 Although the linear relationship assumed so far in this chapter is often adequate, there are many cases for which a nonlinear functional form is more suitable. To keep things simple in this section we assume that we only have one predictor $x$.
 
-Simply transforming the forecast variable $y$ and/or the predictor variable $x$ and then estimating a regression model using the transformed variables is the simplest way of obtaining a nonlinear specification. We should note that these specifications and the specification that follow are still linear in the parameters. The most commonly used transformation is the (natural) logarithmic (see Section \@ref(sec-transformations)).
+The simplest way of modelling a nonlinear relationship is to transform the forecast variable $y$ and/or the predictor variable $x$ before estimating a regression model. While this provides a non-linear functional form, the model is still linear in the parameters. The most commonly used transformation is the (natural) logarithm (see Section \@ref(sec-transformations)).
 
 A **log-log** functional form is specified as
 $$
   \log y=\beta_0+\beta_1 \log x +\varepsilon.
 $$
-In this model, the slope $\beta_1$ is interpreted as an elasticity, $\beta_1$ is the average percentage change in $y$ resulting from a $1\%$ increase in $x$. Other useful forms can also be specified. The **log-linear** form is specified by only transforming the forecast variable and the **linear-log** form is obtained by transforming the predictor.
+In this model, the slope $\beta_1$ can be interpreted as an elasticity: $\beta_1$ is the average percentage change in $y$ resulting from a $1\%$ increase in $x$. Other useful forms can also be specified. The **log-linear** form is specified by only transforming the forecast variable and the **linear-log** form is obtained by transforming the predictor.
 
-Recall that in order to perform a logarithmic transformation to a variable, all its observed values must be greater than zero. In the case that variable $x$ contains zeros we use the transformation $\log(x+1)$, i.e., we add one to the value of the variable and then take logarithms. This has a similar effect to taking logarithms but avoids the problem of zeros. It also has the neat side-effect of zeros on the original scale remaining zeros on the transformed scale.
+Recall that in order to perform a logarithmic transformation to a variable, all its observed values must be greater than zero. In the case that variable $x$ contains zeros, we use the transformation $\log(x+1)$; i.e., we add one to the value of the variable and then take logarithms. This has a similar effect to taking logarithms but avoids the problem of zeros. It also has the neat side-effect of zeros on the original scale remaining zeros on the transformed scale.
 
 There are cases for which simply transforming the data will not be adequate and a more general specification may be required. Then the model we use is
 $$y=f(x) +\varepsilon$$
@@ -913,6 +917,7 @@ $$ x_{1}= x \quad x_{2}=x^2 \quad x_3=x^3 \quad x_4 = (x-c_{1})_+ \quad\dots\qua
 Cubic splines usually give a better fit to the data. However, forecasting values of $y$ when $x$ is outside the range of the historical data becomes very unreliable.
 
 ### Forecasting with a nonlinear trend {-}
+
 In Section \@ref(Regr-UsefulPredictors) fitting a linear trend to a time series by setting $x=t$ was introduced. The simplest way of fitting a nonlinear trend is using quadratic or higher order trends obtained by specifying
 \[
   x_{1,t} =t,\quad x_{2,t}=t^2,\quad \ldots.
@@ -932,7 +937,7 @@ in the model. If the associated coefficients of $x_{1,t}$ and $x_{2,t}$ are $\be
 
 #### Example: Boston marathon winning times {-}
 
-Figure \@ref(fig:marathonLinear) below in the left panel shows the Boston marathon winning times (in minutes) since it started in 1897. The time series shows a general downward trend as the winning times have been improving over the years. The panel on the right shows the residuals from fitting a linear trend to the data. The plot shows an obvious nonlinear pattern which has not been captured by the linear trend.
+The left panel of Figure \@ref(fig:marathonLinear) shows the Boston marathon winning times (in minutes) since it started in 1897. The time series shows a general downward trend as the winning times have been improving over the years. The right panel shows the residuals from fitting a linear trend to the data. The plot shows an obvious nonlinear pattern which has not been captured by the linear trend.
 
 ```{r marathonLinear, echo=FALSE, fig.cap="Fitting a linear trend to the Boston marathon winning times is inadequate", message=TRUE, warning=FALSE}
 fit.lin <- tslm(marathon ~ trend)
@@ -943,29 +948,25 @@ p1 <- autoplot(marathon) +
   theme(legend.position = "none")
 p2 <- autoplot(residuals(fit.lin)) +
     xlab("Year") + ylab("Residuals from a linear trend")
-gridExtra::grid.arrange(p1, p2, ncol = 2)
+gridExtra::grid.arrange(p1, p2, ncol = 1)
 ```
 
 Fitting an exponential trend to the data can be achieved by transforming the $y$ variable so that the model to be fitted is,
 $$\log y_t=\beta_0+\beta_1 t +\varepsilon_t.$$
-The fitted exponential trend and forecasts are shown in Figure \@ref(fig:marathonNonlinear) below. Although the exponential trend does not seem to fit the data much better than the linear trend, it gives a more sensible projection in that the winning times will decrease in the future but at a decaying rate rather than a linear non-changing rate.
+The fitted exponential trend and forecasts are shown in Figure \@ref(fig:marathonNonlinear). Although the exponential trend does not seem to fit the data much better than the linear trend, it gives a more sensible projection in that the winning times will decrease in the future but at a decaying rate rather than a linear non-changing rate.
 
-Simply eyeballing the winning times reveals three very different periods. There is a lot of volatility in the winning times from the beginning up to about 1940 with the winning times decreasing overall but with significant increases in the decade of the 1920s. The almost linear decrease in times after 1940 is then followed by a flattening out after the 1980s with almost an upturn towards the end of the sample. Following these observations we specify as knots the years 1940 and 1980. We should warn here that subjectively identifying suitable knots in the data can lead to overfitting which can be detrimental to the forecast performance of a model and should be performed with caution.
+The plot of winning times reveals three very different periods. There is a lot of volatility in the winning times up to about 1940, with the winning times decreasing overall but with significant increases during the 1920s. After 1940 there is a nearly-linear decrease in times, followed by a flattening out after the 1980s with almost an upturn towards the end of the sample. Following these observations we specify as knots the years 1940 and 1980. We should warn here that subjectively identifying suitable knots in the data can lead to overfitting which can be detrimental to the forecast performance of a model and should be performed with caution.
 
 ```{r marathonNonlinear, echo=TRUE, message=TRUE, warning=FALSE, fig.cap="Projecting forecasts from a linear, exponential, piecewise linear trends and a cubic spline for the Boston marathon winning times"}
-
 h <- 10
-
 fit.lin <- tslm(marathon ~ trend)
 fcasts.lin <- forecast(fit.lin, h=h)
-
 fit.exp <- tslm(marathon ~ trend, lambda = 0)
 fcasts.exp <- forecast(fit.exp, h=h)
 
+t <- time(marathon)
 t.break1 <- 1940
 t.break2 <- 1980
-
-t <- time(marathon)
 t1 <- ts(pmax(0,t-t.break1), start=1897)
 t2 <- ts(pmax(0,t-t.break2), start=1897)
 
@@ -987,11 +988,12 @@ autoplot(marathon) +
   xlab("Year") +  ylab("Winning times in minutes") +
   ggtitle("Boston Marathon") +
   guides(colour=guide_legend(title=" "))
-
-  ## TODO: Add cubic spline
 ```
 
-Figure \@ref(fig:marathonNonlinear) above shows the fitted lines and forecasts from linear, exponential and piecewise linear trends. The piecewise linear trend fits the data better than both the exponential and linear trends and seems to return sensible forecasts. The residuals plotted in the Figure \@ref(fig:residPiecewise) below show that the model has mostly captured the trend well although there is some autocorrelation remaining (we will deal with this in Chapter \@ref(ch-advanced)). We should however again warn here that the projection forward from the piecewise linear trend can be very sensitive to the choice of location of the knots, especially the ones located towards the end of the sample. For example moving the knot placed at 1980 even five years forward will reveal very different forecasts. The wide prediction interval associated with the forecasts form the piecewise linear trend reflects the volatility observed in the historical winning times.
+<!--   ## TODO: Add cubic spline???
+ -->
+
+Figure \@ref(fig:marathonNonlinear) above shows the fitted lines and forecasts from linear, exponential and piecewise linear trends. The piecewise linear trend fits the data better than both the exponential and linear trends and seems to return sensible forecasts. The residuals plotted in Figure \@ref(fig:residPiecewise) show that the model has mostly captured the trend well although there is some autocorrelation remaining (we will deal with this in Chapter \@ref(ch-advanced)). We should however again warn here that the projection forward from the piecewise linear trend can be very sensitive to the choice of location of the knots, especially the ones located towards the end of the sample. For example moving the knot placed at 1980 even five years forward will reveal very different forecasts. The wide prediction interval associated with the forecasts form the piecewise linear trend reflects the volatility observed in the historical winning times.
 
 ```{r residPiecewise, fig.cap="Residuals from the piecewise trend.",  message=FALSE, warning=FALSE}
 checkresiduals(fit.pw)
@@ -1035,7 +1037,8 @@ A linear combination of predictors is highly correlated with another linear comb
 
 The dummy variable trap is a special case of multicollinearity. Suppose you have quarterly data and use four dummy variables, $d_1,d_2,d_3$ and $d_4$. Then $d_4=1-d_1-d_2-d_3$, so there is perfect correlation between $d_4$ and $d_1+d_2+d_3$.
 
-`TODO: I have changed this below - change back if not improved`
+<!-- `TODO: I have changed this below - change back if not improved`????
+ -->
 
 The dummy variable trap is a special case of multicollinearity, referred to as perfect multicollinearity. Suppose you have quarterly data and use four dummy variables, $d_1,~d_2,~d_3$ and $d_4$. Then $d_1+d_2+d_3+d_4=1$ and therefore there is perfect correlation between the column of ones representing the constant and the linear combination, in this case the sum, of the dummies.
 
@@ -1049,7 +1052,10 @@ Note that if you are using good statistical software, if you are not interested 
 
 ## Exercises {#Regr-exercises}
 
-1. Electricity consumption was recorded for a small town on 12 consecutive  days. The following maximum temperatures (degrees Celsius) and consumption (megawatt-hours) were recorded for each day. `TODO: change the econsumption to a ts of 12 concecutive days - change the lm to tslm below`
+<!-- `TODO: change the econsumption to a ts of 12 concecutive days - change the lm to tslm below`????
+ -->
+
+1. Electricity consumption was recorded for a small town on 12 consecutive  days. The following maximum temperatures (degrees Celsius) and consumption (megawatt-hours) were recorded for each day. 
 
     |     |  1   |  2   |  3   |  4   |  5   |  6   |  7   |  8   |  9   |  10  |  11  |  12  |
     |:----|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
@@ -1095,7 +1101,10 @@ Note that if you are using good statistical software, if you are not interested 
     i. Transform your predictions and intervals to obtain predictions and intervals for the raw data.
     j. How could you improve these predictions by modifying the model?
 
-5. `TODO: you got to this before me ;-)` The `gasoline` series consists of weekly data for supplies of US finished motor gasoline product, from 2 February 1991 to 20 January 2017. The units are in "thousand barrels per day". Consider only the data to the end of 2004.
+<!-- `TODO: you got to this before me ;-)` ????
+ -->
+
+5. The `gasoline` series consists of weekly data for supplies of US finished motor gasoline product, from 2 February 1991 to 20 January 2017. The units are in "thousand barrels per day". Consider only the data to the end of 2004.
     a. Fit a harmonic regression with trend to the data. Select the appropriate number of Fourier terms to include by minimizing the AICc or CV value.
     b. Check the residuals of the final model using the `checkresiduals()` function. Even though the residuals fail the correlation tests, the results are probably not severe enough to make much difference to the forecasts and prediction intervals. (Note that the correlations are relatively small, even though they are significant.)
     c. To forecast using harmonic regression, you will need to generate the future values of the Fourier terms. This can be done as follows.
