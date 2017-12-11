@@ -1,4 +1,4 @@
-#The forecaster's toolbox {#ch-toolbox}
+#The forecaster's toolbox {#toolbox}
 
 In this chapter, we discuss some general tools that are useful for many different forecasting situations. We will describe some benchmark forecasting methods, ways of making the forecasting task simpler using transformations and adjustments, methods for checking whether a forecasting method has adequately utilized the available information, and techniques for computing prediction intervals.
 
@@ -246,7 +246,7 @@ Residuals are useful in checking whether a model has adequately captured the inf
 
 Any forecasting method that does not satisfy these properties can be improved. However, that does not mean that forecasting methods that satisfy these properties cannot be improved. It is possible to have several different forecasting methods for the same data set, all of which satisfy these properties. Checking these properties is important in order to see whether a method is using all of the available information, but it is not a good way to select a forecasting method.
 
-If either of these properties is not satisfied, then the forecasting method can be modified to give better forecasts. Adjusting for bias is easy: if the residuals have mean $m$, then simply add $m$ to all forecasts and the bias problem is solved. Fixing the correlation problem is harder, and we will not address it until Chapter \@ref(ch-dynamic).
+If either of these properties is not satisfied, then the forecasting method can be modified to give better forecasts. Adjusting for bias is easy: if the residuals have mean $m$, then simply add $m$ to all forecasts and the bias problem is solved. Fixing the correlation problem is harder, and we will not address it until Chapter \@ref(dynamic).
 
 In addition to these essential properties, it is useful (but not necessary) for the residuals to also have the following two properties.
 
@@ -358,7 +358,7 @@ Some references describe the test set as the "hold-out set" because these data a
 
 ### Functions to subset a time series {-}
 
-The `window` function introduced in Chapter \@ref(ch-graphics) is very useful when extracting a portion of a time series, such as we need when creating training and test sets. In the `window` function, we specify the start and/or end of the portion of time series required using time values. For example,
+The `window` function introduced in Chapter \@ref(graphics) is very useful when extracting a portion of a time series, such as we need when creating training and test sets. In the `window` function, we specify the start and/or end of the portion of time series required using time values. For example,
 
 ```r
 window(ausbeer, start=1995)
@@ -772,7 +772,7 @@ So far we have used functions which produce a `forecast` object directly. But a 
 
 The `forecast()` function works with many different types of input. It generally takes a time series or time series model as its main argument, and produces forecasts appropriately. It always returns objects of class `forecast`.
 
-If the first argument is of class `ts`, it returns forecasts from the automatic ETS algorithm discussed in Chapter \@ref(ch-expsmooth).
+If the first argument is of class `ts`, it returns forecasts from the automatic ETS algorithm discussed in Chapter \@ref(expsmooth).
 
 Here is a simple example, applying `forecast()` to the `ausbeer` data:
 

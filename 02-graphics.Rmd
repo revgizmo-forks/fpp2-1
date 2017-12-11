@@ -1,4 +1,4 @@
-# Time series graphics {#ch-graphics}
+# Time series graphics {#graphics}
 
 The first thing to do in any data analysis task is to plot the data. Graphs enable many features of the data to be visualized, including patterns, unusual observations, changes over time, and relationships between variables. The features that are seen in plots of the data must then be incorporated, as far as possible, into the forecasting methods to be used. Just as the type of data determines what forecasting method to use, it also determines what graphs are appropriate.
 
@@ -46,7 +46,7 @@ Actually, there are not 52 weeks in a year, but 365.25/7 = `r format(365.25/7,di
 
 If the frequency of observations is greater than once per week, then there is usually more than one way of handling the frequency. For example, data with daily observations might have a weekly seasonality (frequency=7) or an annual seasonality (frequency=365.25). Similarly, data that are observed every minute might have an hourly seasonality (frequency=60), a daily seasonality (frequency=24x60=1440), a weekly seasonality (frequency=24x60x7=10080) and an annual seasonality (frequency=24x60x365.25=525960). If you want to use a `ts` object, then you need to decide which of these is the most important.
 
-In chapter \@ref(ch-advanced) we will look at handling these types of multiple seasonality, without having to choose just one of the frequencies.
+In chapter \@ref(advanced) we will look at handling these types of multiple seasonality, without having to choose just one of the frequencies.
 
 
 ##Time plots

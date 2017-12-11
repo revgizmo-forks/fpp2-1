@@ -1,4 +1,4 @@
-# Linear regression models {#ch-regression}
+# Linear regression models {#regression}
 
 In this chapter we discuss linear regression models. The basic concept is that we forecast the time series of interest $y$ assuming that it has a linear relationship with other time series $x$.
 
@@ -399,7 +399,7 @@ Using the `checkresiduals` function introduced in Section \@ref(residuals), we c
 
 The time plot shows a large negative value in the residuals at 2004 Q4, which suggests that  something unusual may have happened in that quarter. It would be worth investigating to see if there were any unusual circumstances or events which may have significantly reduced beer production for that quarter.
 
-The remaining residuals show that the model has captured the patterns in the data quite well. However, there is a small amount of autocorrelation left in the residuals, seen in the significant spike in the ACF plot but not detected to be significant by the Breusch-Godfrey test. This suggests that there may be some information remaining in the residuals and the model can be slightly improved to capture this. However, it is unlikely that it will make much difference to the resulting forecasts. The forecasts from the current model are still unbiased, but will have larger prediction intervals than they need to. In Chapter \@ref(ch-dynamic) we discuss dynamic regression models used for better capturing information left in the residuals.
+The remaining residuals show that the model has captured the patterns in the data quite well. However, there is a small amount of autocorrelation left in the residuals, seen in the significant spike in the ACF plot but not detected to be significant by the Breusch-Godfrey test. This suggests that there may be some information remaining in the residuals and the model can be slightly improved to capture this. However, it is unlikely that it will make much difference to the resulting forecasts. The forecasts from the current model are still unbiased, but will have larger prediction intervals than they need to. In Chapter \@ref(dynamic) we discuss dynamic regression models used for better capturing information left in the residuals.
 
 The histogram shows that the residuals from modelling the beer data seem to be slightly negatively skewed, although that is due to the large negative value in 2004 Q4.
 
@@ -453,7 +453,7 @@ cbind(Fitted=fitted(fit), Residuals=residuals(fit)) %>%
 
 Observations that take on extreme values compared to the majority of the data are called "outliers". Observations that have a large influence on the estimation results of a regression model are called "influential observations". Usually, influential observations are also outliers that are extreme in the $x$ direction.
 
-There are formal methods for detecting outliers and influential observations that are beyond the scope of this textbook. As we suggested at the beginning of Chapter \@ref(ch-graphics), getting familiar with your data prior to performing any analysis is of vital importance. A scatter plot of $y$ against each $x$ is always a useful starting point in regression analysis and often helps to identify unusual observations.
+There are formal methods for detecting outliers and influential observations that are beyond the scope of this textbook. As we suggested at the beginning of Chapter \@ref(graphics), getting familiar with your data prior to performing any analysis is of vital importance. A scatter plot of $y$ against each $x$ is always a useful starting point in regression analysis and often helps to identify unusual observations.
 
 One source for an outlier occurring is an incorrect data entry. Simple descriptive statistics of your data can identify minima and maxima that are not sensible. If such an observation is identified, and it has been incorrectly recorded, it should be immediately corrected or removed from the sample.
 
@@ -536,7 +536,7 @@ We should warn here that the evaluation of the standard error can be highly subj
 
 ### Spurious regression {-}
 
-More often than not, time series data are "non-stationary"; that is, the values of the time series do not fluctuate around a constant mean or with a constant variance. We will deal with time series stationarity in more detail in Chapter \@ref(ch-arima), but here we need to address the effect that non-stationary data can have on regression models.
+More often than not, time series data are "non-stationary"; that is, the values of the time series do not fluctuate around a constant mean or with a constant variance. We will deal with time series stationarity in more detail in Chapter \@ref(arima), but here we need to address the effect that non-stationary data can have on regression models.
 
 For example consider the two variables plotted in Figure \@ref(fig:spurious). These appear to be related simply because they both trend upwards in the same manner. However, air passenger traffic in Australia has nothing to do with rice production in Guinea.
 
@@ -554,7 +554,7 @@ p3 <- cbind(guinearice, aussies) %>%
 gridExtra::grid.arrange(gridExtra::arrangeGrob(p1, p2),p3, ncol = 2)
 ```
 
-Regressing non-stationary time series can lead to spurious regressions. The output of regressing Australian air passengers on rice production in Guinea is shown in Figure \@ref(fig:tslmspurious). High $R^2$ and high residual autocorrelation can be signs of spurious regression. We discuss the issues surrounding non-stationary data and spurious regressions in more detail in Chapter \@ref(ch-dynamic).
+Regressing non-stationary time series can lead to spurious regressions. The output of regressing Australian air passengers on rice production in Guinea is shown in Figure \@ref(fig:tslmspurious). High $R^2$ and high residual autocorrelation can be signs of spurious regression. We discuss the issues surrounding non-stationary data and spurious regressions in more detail in Chapter \@ref(dynamic).
 
 Cases of spurious regression might appear to give reasonable short-term forecasts, but they will generally not continue to work into the future.
 
@@ -722,7 +722,7 @@ which comprises the estimated coefficients and ignores the error in the regressi
 
 When using regression models for time series data, we need to distinguish between the different types of forecasts that can be produced, depending on what is assumed to be known when the forecasts are computed.
 
-*Ex ante forecasts* are those that are made using only the information that is available in advance. For example, ex-ante forecasts for the percentage change in US consumption for quarters following the end of the sample, should only use information that was available *up to and including* `r tail(quarters,1)`. These are genuine forecasts, made in advance using whatever information is available at the time. Therefore in order to generate ex-ante forecasts, the model requires future values (forecasts) of the predictors. To obtain these we can use one of the simple methods introduced in Section \@ref(sec-2-methods) or more sophisticated pure time series approaches that follow in Chapters \@ref(ch-expsmooth) and \@ref(ch-arima). Alternatively, forecasts from some other source, such as a government agency, may be available and can be used.
+*Ex ante forecasts* are those that are made using only the information that is available in advance. For example, ex-ante forecasts for the percentage change in US consumption for quarters following the end of the sample, should only use information that was available *up to and including* `r tail(quarters,1)`. These are genuine forecasts, made in advance using whatever information is available at the time. Therefore in order to generate ex-ante forecasts, the model requires future values (forecasts) of the predictors. To obtain these we can use one of the simple methods introduced in Section \@ref(sec-2-methods) or more sophisticated pure time series approaches that follow in Chapters \@ref(expsmooth) and \@ref(arima). Alternatively, forecasts from some other source, such as a government agency, may be available and can be used.
 
 *Ex post forecasts* are those that are made using later information on the predictors. For example, ex post forecasts of consumption may use the actual observations of the predictors, once these have been observed. These are not genuine forecasts, but are useful for studying the behaviour of forecasting models.
 
@@ -773,7 +773,7 @@ An alternative formulation is to use as predictors their lagged values. Assuming
 $$y_{t+h}=\beta_0+\beta_1x_{1,t}+\dots+\beta_kx_{k,t}+\varepsilon_{t+h}$$
 for $h=1,2\ldots$. The predictor set is formed by values of the $x$s that are observed $h$ time periods prior to observing $y$. Therefore when the estimated model is projected into the future, i.e., beyond the end of the sample $T$, all predictor values are available.
 
-Including lagged values of the predictors does not only make the model operational for easily generating forecasts, it also makes it intuitively appealling. For example, the effect of a policy change with the aim of increasing production may not have an instantaneous effect on consumption expenditure. It is most likely that this will happend with a lagging effect. We touched upon this in Section \@ref(Regr-UsefulPredictors) when briefly introducing distributed lags as predictors. Several directions for generalising regression models to better incorporate the rich dynamics observed in time series are discussed In Section \@ref(ch-dynamic).
+Including lagged values of the predictors does not only make the model operational for easily generating forecasts, it also makes it intuitively appealling. For example, the effect of a policy change with the aim of increasing production may not have an instantaneous effect on consumption expenditure. It is most likely that this will happend with a lagging effect. We touched upon this in Section \@ref(Regr-UsefulPredictors) when briefly introducing distributed lags as predictors. Several directions for generalising regression models to better incorporate the rich dynamics observed in time series are discussed In Section \@ref(dynamic).
 
 ### Prediction intervals {-}
 
@@ -993,7 +993,7 @@ autoplot(marathon) +
 <!--   ## TODO: Add cubic spline???
  -->
 
-Figure \@ref(fig:marathonNonlinear) above shows the fitted lines and forecasts from linear, exponential and piecewise linear trends. The piecewise linear trend fits the data better than both the exponential and linear trends and seems to return sensible forecasts. The residuals plotted in Figure \@ref(fig:residPiecewise) show that the model has mostly captured the trend well although there is some autocorrelation remaining (we will deal with this in Chapter \@ref(ch-advanced)). We should however again warn here that the projection forward from the piecewise linear trend can be very sensitive to the choice of location of the knots, especially the ones located towards the end of the sample. For example moving the knot placed at 1980 even five years forward will reveal very different forecasts. The wide prediction interval associated with the forecasts form the piecewise linear trend reflects the volatility observed in the historical winning times.
+Figure \@ref(fig:marathonNonlinear) above shows the fitted lines and forecasts from linear, exponential and piecewise linear trends. The piecewise linear trend fits the data better than both the exponential and linear trends and seems to return sensible forecasts. The residuals plotted in Figure \@ref(fig:residPiecewise) show that the model has mostly captured the trend well although there is some autocorrelation remaining (we will deal with this in Chapter \@ref(advanced)). We should however again warn here that the projection forward from the piecewise linear trend can be very sensitive to the choice of location of the knots, especially the ones located towards the end of the sample. For example moving the knot placed at 1980 even five years forward will reveal very different forecasts. The wide prediction interval associated with the forecasts form the piecewise linear trend reflects the volatility observed in the historical winning times.
 
 ```{r residPiecewise, fig.cap="Residuals from the piecewise trend.",  message=FALSE, warning=FALSE}
 checkresiduals(fit.pw)

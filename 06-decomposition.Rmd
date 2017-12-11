@@ -1,4 +1,4 @@
-#Time series decomposition {#ch-decomposition}
+#Time series decomposition {#decomposition}
 
 Time series data can exhibit a huge variety of patterns, and it is helpful to try to split a time series into several components, each representing one of the underlying categories of patterns.
 
@@ -365,7 +365,7 @@ ggsubseriesplot(seasonal(fit)) + ylab("Seasonal")
 
 ## SEATS decomposition
 
-"SEATS" stands for "Seasonal Extraction in ARIMA Time Series" (ARIMA models are discussed in Chapter \@ref(ch-arima)). This procedure was developed at the Bank of Spain, and is now widely used by government agencies around the world. The procedure works only with quarterly and monthly data. So seasonality of other kinds, such as daily data, or hourly data, or weekly data, require an alternative approach.
+"SEATS" stands for "Seasonal Extraction in ARIMA Time Series" (ARIMA models are discussed in Chapter \@ref(arima)). This procedure was developed at the Bank of Spain, and is now widely used by government agencies around the world. The procedure works only with quarterly and monthly data. So seasonality of other kinds, such as daily data, or hourly data, or weekly data, require an alternative approach.
 
 The details are beyond the scope of this book. However, a complete discussion of the method is available in @Dagum2016. Here we will only demonstrate how to use it via the `seasonal` package.
 
@@ -429,7 +429,7 @@ where $\hat{A}_t = \hat{T}_t\hat{R}_{t}$.
 
 To forecast a decomposed time series, we forecast the seasonal component, $\hat{S}_t$, and the seasonally adjusted component $\hat{A}_t$, separately. It is usually assumed that the seasonal component is unchanging, or changing extremely slowly, so it is forecast by simply taking the last year of the estimated component. In other words, a seasonal naïve method is used for the seasonal component.
 
-To forecast the seasonally adjusted component, any non-seasonal forecasting method may be used. For example, a random walk with drift model, or Holt’s method (discussed in the next chapter), or a non-seasonal ARIMA model (discussed in Chapter \@ref(ch-arima)), may be used.
+To forecast the seasonally adjusted component, any non-seasonal forecasting method may be used. For example, a random walk with drift model, or Holt’s method (discussed in the next chapter), or a non-seasonal ARIMA model (discussed in Chapter \@ref(arima)), may be used.
 
 ### Example: Electrical equipment manufacturing {-}
 
