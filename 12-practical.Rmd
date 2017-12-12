@@ -174,7 +174,7 @@ ETS <- forecast(ets(train), h=h)
 ARIMA <- forecast(auto.arima(train, lambda=0, biasadj=TRUE), h=h)
 STL <- stlf(train, lambda=0, h=h, biasadj=TRUE)
 NNAR <- forecast(nnetar(train), h=h)
-TBATS <- forecast(tbats(train), h=h)
+TBATS <- forecast(tbats(train, biasadj=TRUE), h=h)
 Combination <- (ETS$mean + ARIMA$mean + STL$mean + NNAR$mean + TBATS$mean)/5
 ```
 
@@ -199,7 +199,7 @@ c(ETS=accuracy(ETS, auscafe)["Test set","RMSE"],
   Combination=accuracy(Combination, auscafe)["Test set","RMSE"])
 ```
 
-TBATS does particularly well with this series, but the combination approach is not far behind. For other data, TBATS may be quite poor, while the combination approach is almost always close to, or better than, the best component method.
+TBATS does particularly well with this series, but the combination approach is even better. For other data, TBATS may be quite poor, while the combination approach is almost always close to, or better than, the best component method.
 
 ## Prediction intervals for aggregates {#aggregates}
 
