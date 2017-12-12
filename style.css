@@ -5,12 +5,14 @@
 
 #header .title {
   margin: 0EM;
-  padding-left: 15px;
+  padding-left: 20px;
   padding-bottom: 0em;
   color: #3b556e;  
+  border-radius: 25px 25px 0px 0px;
   border-bottom: 0px; 
   background: #cccccc;
   font-size: 36pt;
+  line-height: 65px;
   font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 #header .subtitle em {
@@ -19,11 +21,13 @@
 
 #header h4.author {
   margin: 0;
-  padding-left: 15px;
+  padding-left: 20px;
   padding-bottom: 0em;
   color: #cccccc;
   background: #3b556e;
   font-size: 18pt;
+  font-style: normal;
+  font-weight: normal;
   font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 #header h4.author em {
@@ -32,7 +36,8 @@
 
 #header address {
   font-style: normal;
-  padding-left: 15px;
+  border-radius: 0px 0px 25px 25px;
+  padding-left: 20px;
   color: #cccccc;
   background: #3b556e;
   font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;  
