@@ -1,7 +1,9 @@
 ---
 knit: "bookdown::render_book"
 title: "Forecasting: Principles&nbsp;and&nbsp;Practice"
-author: "Rob J Hyndman and George Athanasopoulos"
+author: 
+  name: "Rob J Hyndman and George Athanasopoulos"
+  affiliation: Monash University, Australia
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
@@ -17,7 +19,7 @@ cover-image: fppcover.jpg
 
 # Preface {-}
 
-```{r, echo=FALSE, out.width="50%", fig.align='left'}
+```{r, echo=FALSE, out.width="50%", out.extra = 'style="float:right;padding-left:20px;"'}
 knitr::include_graphics("fpp2_cover.jpg")
 ```
 

@@ -8,32 +8,34 @@
   padding-left: 15px;
   padding-bottom: 0em;
   color: #3b556e;  
+  border-bottom: 0px; 
   background: #cccccc;
-  font-size: 48pt;
+  font-size: 36pt;
   font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-#header .subtitle {
-  margin-top: 0EM;
-  padding-left: 15px;
-  margin-bottom: 1em;
-  background: #cccccc;
-  color: #3b556e;
-  font-size: 32pt;
-  font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
 #header .subtitle em {
   font-style: normal;
 }
 
 #header h4.author {
   margin: 0;
-  color: #3b556e;
+  padding-left: 15px;
+  padding-bottom: 0em;
+  color: #cccccc;
+  background: #3b556e;
   font-size: 18pt;
   font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 #header h4.author em {
   font-style: normal;
+}
+
+#header address {
+  font-style: normal;
+  padding-left: 15px;
+  color: #cccccc;
+  background: #3b556e;
+  font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;  
 }
 
 .book.font-family-0 {
@@ -48,6 +50,10 @@
   background-color: #eeeeee;
   padding-left: 20px;
   font-size: 8pt;
+}
+
+h1, h2 { 
+  border-bottom: 2px solid #3b556e; 
 }
 
 h1, h2, h3, h4 {
