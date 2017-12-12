@@ -1,10 +1,10 @@
-#ARIMA models {#arima}
+# ARIMA models {#arima}
 
 ARIMA models provide another approach to time series forecasting. Exponential smoothing and ARIMA models are the two most widely-used approaches to time series forecasting, and provide complementary approaches to the problem. While exponential smoothing models are based on a description of the trend and seasonality in the data, ARIMA models aim to describe the autocorrelations in the data.
 
 Before we introduce ARIMA models, we must first discuss the concept of stationarity and the technique of differencing time series.
 
-##Stationarity and differencing
+## Stationarity and differencing {#stationarity}
 
 **A stationary time series is one whose properties do not depend on the time at which the series is observed.**^[More precisely, if $\{y_t\}$ is a *stationary* time series, then for all $s$, the distribution of $(y_t,\dots,y_{t+s})$ does not depend on $t$.] Thus, time series with trends, or with seasonality, are not stationary --- the trend and seasonality will affect the value of the time series at different times. On the other hand, a white noise series is stationary --- it does not matter when you observe it, it should look much the same at any point in time.
 
@@ -81,7 +81,7 @@ $$
 $$
 The value of $c$ is the average of the changes between consecutive observations. If $c$ is positive, then the average change is an increase in the value of $y_t$. Thus, $y_t$ will tend to drift upwards. However, if $c$ is negative, $y_t$ will tend to drift downwards.
 
-This is the model behind the drift method discussed in Section \@ref(sec-2-methods).
+This is the model behind the drift method discussed in Section \@ref(simple-methods).
 
 ### Second-order differencing {-}
 
@@ -191,7 +191,7 @@ if(nd > 0)
   xstar <- diff(xstar, differences=nd)
 ```
 
-##Backshift notation
+## Backshift notation {#backshift}
 
 The backward shift operator $B$ is a useful notational device when working with time series lags:
 $$
@@ -225,7 +225,7 @@ For example, a seasonal difference followed by a first difference can be written
 \end{align*}
 the same result we obtained earlier.
 
-##Autoregressive models
+## Autoregressive models {#AR}
 
 In a multiple regression model, we forecast the variable of interest using a linear combination of predictors. In an autoregression model, we forecast the variable of interest using a linear combination of *past values of the variable*. The term *auto*regression indicates that it is a regression of the variable against itself.
 
@@ -260,7 +260,7 @@ We normally restrict autoregressive models to stationary data, in which case som
 
 When $p\ge3$, the restrictions are much more complicated. R takes care of these restrictions when estimating a model.
 
-##Moving average models {#sec:mamodels}
+## Moving average models {#MA}
 
 Rather than using past values of the forecast variable in a regression, a moving average model uses past forecast errors in a regression-like model.
 $$
@@ -307,7 +307,7 @@ The invertibility constraints are similar to the stationarity constraints.
 
 More complicated conditions hold for $q\ge3$. Again, R will take care of these constraints when estimating the models.
 
-##Non-seasonal ARIMA models {#sec:nonseasonalarima}
+## Non-seasonal ARIMA models {#non-seasonal-arima}
 
 If we combine differencing with autoregression and a moving average model, we obtain a non-seasonal ARIMA model. ARIMA is an acronym for AutoRegressive Integrated Moving Average model (in this context, "integration" is the reverse of differencing). The full model can be written as
 \begin{equation}
@@ -362,7 +362,7 @@ autoplot(uschange[,"Consumption"]) +
 
 Figure \@ref(fig:usconsumption) shows quarterly percentage changes in US consumption expenditure. Although it is a quarterly series, there does not appear to be a seasonal pattern, so we will fit a non-seasonal ARIMA model.
 
-The following R code was used to select a model automatically. (We use the argument `seasonal=FALSE` for now, but we will consider seasonal ARIMA models in Section \@ref(sec-seasonal-arima) )
+The following R code was used to select a model automatically. (We use the argument `seasonal=FALSE` for now, but we will consider seasonal ARIMA models in Section \@ref(seasonal-arima) )
 
 ```{r usconsumptionauto}
 (fit <- auto.arima(uschange[,"Consumption"], seasonal=FALSE))
@@ -392,7 +392,7 @@ and $e_t$ is white noise with a standard deviation of $`r format(sqrt(fit$sigma2
 fit %>% forecast(h=10) %>% autoplot(include=80)
 ```
 
-###Understanding ARIMA models  {-}
+### Understanding ARIMA models  {-}
 
 The `auto.arima()` function is very useful, but anything automated can be a little dangerous, and it is worth understanding something of the behaviour of the models even when you rely on an automatic procedure to choose the model for you.
 
@@ -460,7 +460,7 @@ This model is actually slightly better than the model identified by `auto.arima`
 This time, `auto.arima` has found the same model that we guessed from the ACF and PACF plots. The forecasts from this ARIMA(3,0,0) model are almost identical to those shown in Figure \@ref(fig:usconsumptionf) for the ARIMA(2,0,2) model, so we do not produce the plot here.
 
 
-## Estimation and order selection
+## Estimation and order selection {#arima-estimation}
 
 ### Maximum likelihood estimation  {-}
 
@@ -493,7 +493,7 @@ Good models are obtained by minimizing the AIC, AICc or BIC. Our preference is t
 It is important to note that these information criteria tend not to be good guides to selectingn the appropriate order of differencing ($d$) of a model, but only for selecting the values of $p$ and $q$. This is because the differencing changes the data on which the likelihood is computed, making the AIC values between models with different orders of differencing not comparable. So we need to use some other approach to choose $d$, and then we can use the AICc to select $p$ and $q$.
 
 
-##ARIMA modelling in R
+## ARIMA modelling in R {#arima-r}
 
 ### How does `auto.arima()` work? {-}
 
@@ -640,7 +640,7 @@ The three red dots in the left hand plot correspond to the roots of the polynomi
 The `Arima` function will never return a model with inverse roots outside the unit circle. The `auto.arima` function is even stricter and will not select a model with roots close to the unit circle either.
 
 
-##Forecasting
+## Forecasting {#arima-forecasting}
 
 ### Point forecasts {-}
 
@@ -711,7 +711,7 @@ $$
 $$
 and a 95% prediction interval is given by $\hat{y}_{T+h|T} \pm 1.96\sqrt{\sigma_h}$.
 
-In Section \@ref(sec:mamodels), we showed that an AR(1) model can be written as an MA($\infty$) model. Using this equivalence, the above result for MA($q$) models can also be used to obtain prediction intervals for AR(1) models.
+In Section \@ref(MA), we showed that an AR(1) model can be written as an MA($\infty$) model. Using this equivalence, the above result for MA($q$) models can also be used to obtain prediction intervals for AR(1) models.
 
 More general results, and other special cases of multi-step prediction intervals for an ARIMA($p$,$d$,$q$) model, are given in more advanced textbooks such as @BDbook16.
 
@@ -721,7 +721,7 @@ In general, prediction intervals from ARIMA models increase as the forecast hori
 
 As with most prediction interval calculations, ARIMA-based intervals tend to be too narrow. This occurs because only the variation in the errors has been accounted for. There is also variation in the parameter estimates, and in the model order, that has not been included in the calculation. In addition, the calculation assumes that the historical patterns that have been modelled will continue into the forecast period.
 
-##Seasonal ARIMA models {#sec-seasonal-arima}
+## Seasonal ARIMA models {#seasonal-arima}
 
 So far, we have restricted our attention to non-seasonal data and non-seasonal ARIMA models. However, ARIMA models are also capable of modelling a wide range of seasonal data.
 
@@ -944,7 +944,7 @@ h02 %>%
     ylab("H02 sales (million scripts)") + xlab("Year")
 ```
 
-##ARIMA vs ETS
+## ARIMA vs ETS {#arima-ets}
 
 It is a commonly held myth that ARIMA models are more general than exponential smoothing. While linear exponential smoothing models are all special cases of ARIMA models, the non-linear exponential smoothing models have no equivalent ARIMA counterparts. On the other hand, there are also many ARIMA models that have no exponential smoothing counterparts. In particular, all ETS models are non-stationary, while some ARIMA models are stationary.
 
@@ -968,7 +968,7 @@ For the seasonal models, the ARIMA parameters have a large number of restriction
 
 The AICc is useful for selecting between models in the same class. For example, we can use it to select an ARIMA model between candidate ARIMA models^[As already pointed out, comparing information criteria is only valid for ARIMA models of the same orders of differencing.] or an ETS model between candidate ETS models. However, it cannot be used to compare between ETS and ARIMA models because they are in different model classes, and the likelihood is computed in different ways. The examples below demonstrate selecting between these classes of models. 
 
-###Example: Comparing `auto.arima()` and `ets()` on non-seasonal data {-}
+### Example: Comparing `auto.arima()` and `ets()` on non-seasonal data {-}
 
 We can use time series cross-validation to compare an ARIMA model and an ETS model. The code below provides functions that return forecast objects from `auto.arima()` and `ets()` respectively. 
 
@@ -980,7 +980,7 @@ farima <- function(x, h) {
   forecast(auto.arima(x), h=h)
 }
 ```
-The returned objects can then be passed into `tsCV`. Let's consider ARIMA models and ETS models for the `air` data as introduced in Section \@ref(sec-7-trendmethods) where, `air <- window(ausair, start=1990)`.
+The returned objects can then be passed into `tsCV`. Let's consider ARIMA models and ETS models for the `air` data as introduced in Section \@ref(trend) where, `air <- window(ausair, start=1990)`.
 ```{r include=FALSE}
 air <- window(ausair, start=1990)
 ```
@@ -1002,7 +1002,7 @@ air %>% ets() %>% forecast() %>% autoplot()
 ```
 
 
-###Example: Comparing `auto.arima()` and `ets()` on seasonal data {-}
+### Example: Comparing `auto.arima()` and `ets()` on seasonal data {-}
  
 In this case we want to compare seasonal ARIMA and ETS models applied to the quarterly cement production data `qcement`. Because the series is very long, we can afford to use a training and a test set rather than time series cross-validation. The advantage is that this is much faster. We create a training set from the beginning of 1988 to the end of 2007 and select an ARIMA and an ETS model using the `auto.arima` and `ets` functions.
 
@@ -1046,7 +1046,7 @@ Below we generate and plot forecasts from an ets model for the next 3 years.
 cement %>% ets() %>% forecast(h=12) %>% autoplot()
 ```
 
-##Exercises
+## Exercises {#arima-exercises}
 
 1. Figure \@ref(fig:wnacfplus) shows the ACFs for 36 random numbers, 360 random numbers and 1,000 random numbers.
 
@@ -1076,7 +1076,7 @@ cement %>% ets() %>% forecast(h=12) %>% autoplot()
 
 4. For the `enplanements` data, write down the differences you chose above using backshift operator notation.
 
-5. For your retail data (from Exercise 3 in Section \@ref(ex-graphics)), find the appropriate order of differencing (after transformation if necessary) to obtain stationary data.
+5. For your retail data (from Exercise 3 in Section \@ref(graphics-exercises)), find the appropriate order of differencing (after transformation if necessary) to obtain stationary data.
 
 6. Use R to simulate and plot some data from simple ARIMA models.
     (a) Use the following R code to generate data from an AR(1) model with $\phi_{1} = 0.6$ and $\sigma^2=1$. The process starts with $y_1=0$.
@@ -1241,7 +1241,7 @@ where $y_t$ is the coal production in year $t$ and $e_t$ is a white noise series
 
 
 
-##Further reading
+##Further reading {#arima-reading}
 
 The classic text which popularized ARIMA modelling was @BJ70. The most recent edition is @BJRL15, and it is still an excellent reference for all things ARIMA. @BDbook16 provides a good introduction to the mathematical background to the models, while @PTT01 describes some alternative automatic algorithms to the one used by `auto.arima()`.
 

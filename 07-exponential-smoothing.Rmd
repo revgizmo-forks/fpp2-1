@@ -2,13 +2,13 @@
 
 Exponential smoothing was proposed in the late 1950s (@Brown59, @Holt57, and @Winters60 are key pioneering works), and has motivated some of the most successful forecasting methods. Forecasts produced using exponential smoothing methods are weighted averages of past observations, with the weights decaying exponentially as the observations get older. In other words, the more recent the observation the higher the associated weight. This framework generates reliable forecasts quickly and for a wide range of time series, which is a great advantage and of major importance to applications in industry.
 
-This chapter is divided into two parts. In the first part (Sections \@ref(sec-7-1-SES)--\@ref(sec-7-6-Taxonomy)) we present the mechanics of the most important exponential smoothing methods, and their application in forecasting time series with various characteristics. This helps us develop an intuition to how these methods work. In this setting, selecting and using a forecasting method may appear to be somewhat ad hoc. The selection of the method is generally based on recognising key components of the time series (trend and seasonal) and the way in which these enter the smoothing method (e.g., in an additive, damped or multiplicative manner).
+This chapter is divided into two parts. In the first part (Sections \@ref(ses)--\@ref(taxonomy)) we present the mechanics of the most important exponential smoothing methods, and their application in forecasting time series with various characteristics. This helps us develop an intuition to how these methods work. In this setting, selecting and using a forecasting method may appear to be somewhat ad hoc. The selection of the method is generally based on recognising key components of the time series (trend and seasonal) and the way in which these enter the smoothing method (e.g., in an additive, damped or multiplicative manner).
 
-In the second part of the chapter (Section \@ref(sec-7-ETS)) we present the statistical models that underlie exponential smoothing methods. These models generate identical point forecasts to the methods discussed in the first part of the chapter, but also generate prediction intervals. Furthermore, this statistical framework allows for genuine model selection between competing models.
+In the second part of the chapter (Section \@ref(ets)) we present the statistical models that underlie exponential smoothing methods. These models generate identical point forecasts to the methods discussed in the first part of the chapter, but also generate prediction intervals. Furthermore, this statistical framework allows for genuine model selection between competing models.
 
-##Simple exponential smoothing {#sec-7-1-SES}
+##Simple exponential smoothing {#ses}
 
-The simplest of the exponentially smoothing methods is naturally called "simple exponential smoothing" (SES)^[In some books it is called ``single exponential smoothing'']. This method is suitable for forecasting data with no clear trend or seasonal pattern. For example, the data in Figure \@ref(fig:7-oil) do not display any clear trending behaviour or any seasonality. (There is a rise in the last few years, which might suggest a trend. We will consider whether a trended method would be better for this series later in this chapter.) We have already considered the naïve and the average as possible methods for forecasting such data (Section \@ref(sec-2-methods)).
+The simplest of the exponentially smoothing methods is naturally called "simple exponential smoothing" (SES)^[In some books it is called ``single exponential smoothing'']. This method is suitable for forecasting data with no clear trend or seasonal pattern. For example, the data in Figure \@ref(fig:7-oil) do not display any clear trending behaviour or any seasonality. (There is a rise in the last few years, which might suggest a trend. We will consider whether a trended method would be better for this series later in this chapter.) We have already considered the naïve and the average as possible methods for forecasting such data (Section \@ref(simple-methods)).
 
 ```{r 7-oil, fig.cap="Oil production in Saudi Arabia from 1980 to 2013.", echo=TRUE}
 oildata <- window(oil, start=1996)
@@ -107,7 +107,7 @@ The application of every exponential smoothing method requires the smoothing par
 
 In some cases, the smoothing parameters may be chosen in a subjective manner --- the forecaster specifies the value of the smoothing parameters based on previous experience. However, a more reliable and objective way to obtain values for the unknown parameters is to estimate them from the observed data.
 
-In Section \@ref(Regr-LSprinciple), we estimated the coefficients of a regression model by minimizing the sum of the squared errors (SSE). Similarly, the unknown parameters and the initial values for any exponential smoothing method can be estimated by minimizing the SSE. The errors are specified as $e_t=y_t - \hat{y}_{t|t-1}$ for $t=1,\dots,T$ (the one-step-ahead training errors). Hence, we find the values of the unknown parameters and the initial values that minimize
+In Section \@ref(least-squares), we estimated the coefficients of a regression model by minimizing the sum of the squared errors (SSE). Similarly, the unknown parameters and the initial values for any exponential smoothing method can be estimated by minimizing the SSE. The errors are specified as $e_t=y_t - \hat{y}_{t|t-1}$ for $t=1,\dots,T$ (the one-step-ahead training errors). Hence, we find the values of the unknown parameters and the initial values that minimize
 \begin{equation}
  \text{SSE}=\sum_{t=1}^T(y_t - \hat{y}_{t|t-1})^2=\sum_{t=1}^Te_t^2. (\#eq:7-SSE)
 \end{equation}
@@ -184,9 +184,9 @@ autoplot(fc) +
 
 The forecasts for the period 2014--2018 are plotted in Figure \@ref(fig:ses). Also plotted are one-step-ahead fitted values alongside the data over the period 1996--2013. The large value of $\alpha$ in this example is reflected in the large adjustment that takes place in the estimated level $\ell_t$ at each time. A smaller value of $\alpha$ would lead to smaller changes over time, and so the series of fitted values would be smoother.
 
-The prediction intervals shown here are calculated using the methods described in Section \@ref(sec-7-ETS). The prediction intervals show that there is considerable uncertainty in the future values of oil production over the five-year forecast period. So interpreting the point forecasts without accounting for the large uncertainty can be very misleading.
+The prediction intervals shown here are calculated using the methods described in Section \@ref(ets). The prediction intervals show that there is considerable uncertainty in the future values of oil production over the five-year forecast period. So interpreting the point forecasts without accounting for the large uncertainty can be very misleading.
 
-## Trend methods {#sec-7-trendmethods}
+## Trend methods {#trend}
 
 ###Holt’s linear trend method {-}
 
@@ -196,7 +196,7 @@ The prediction intervals shown here are calculated using the methods described i
   \text{Level equation}   && \ell_{t} &= \alpha y_{t} + (1 - \alpha)(\ell_{t-1} + b_{t-1})\\
   \text{Trend equation}   && b_{t}    &= \beta^*(\ell_{t} - \ell_{t-1}) + (1 -\beta^*)b_{t-1},
 \end{align*}
-where $\ell_t$ denotes an estimate of the level of the series at time $t$, $b_t$ denotes an estimate of the trend (slope) of the series at time $t$, $\alpha$ is the smoothing parameter for the level, $0\le\alpha\le1$, and $\beta^*$ is the smoothing parameter for the trend, $0\le\beta^*\le1$. (We denote this as $\beta^*$ instead of $\beta$ for reasons that will be explained in Section \@ref(sec-7-ETS).)
+where $\ell_t$ denotes an estimate of the level of the series at time $t$, $b_t$ denotes an estimate of the trend (slope) of the series at time $t$, $\alpha$ is the smoothing parameter for the level, $0\le\alpha\le1$, and $\beta^*$ is the smoothing parameter for the trend, $0\le\beta^*\le1$. (We denote this as $\beta^*$ instead of $\beta$ for reasons that will be explained in Section \@ref(ets).)
 
 As with simple exponential smoothing, the level equation here shows that $\ell_t$ is a weighted average of observation $y_t$ and the one-step-ahead training forecast for time $t$, here given by $\ell_{t-1} + b_{t-1}$. The trend equation shows that $b_t$ is a weighted average of the estimated trend at time $t$ based on $\ell_{t} - \ell_{t-1}$ and $b_{t-1}$, the previous estimate of the trend.
 
@@ -211,7 +211,7 @@ autoplot(air) +
   xlab("Year") + ylab("millions of passengers")
 ```
 
-Figure \@ref(fig:airholt0) shows annual passenger numbers for Australian airlines. In Table \@ref(tab:airholt) we demonstrate the application of Holt’s method to these data. The smoothing parameters, $\alpha$ and $\beta$, and the initial values $\ell_0$ and $b_0$ are estimated by minimizing the SSE for the one-step training errors as in Section \@ref(sec-7-1-SES).
+Figure \@ref(fig:airholt0) shows annual passenger numbers for Australian airlines. In Table \@ref(tab:airholt) we demonstrate the application of Holt’s method to these data. The smoothing parameters, $\alpha$ and $\beta$, and the initial values $\ell_0$ and $b_0$ are estimated by minimizing the SSE for the one-step training errors as in Section \@ref(ses).
 
 ```{r airholt1, echo=TRUE}
 fc <- holt(air, h=5)
@@ -320,10 +320,10 @@ autoplot(fc) +
   xlab("Year") + ylab("Livestock, sheep in Asia (millions)")
 ```
 
-The resulting forecasts look sensible with increasing trend, and relatively wide prediction intervals reflecting the variation in the historical data. The prediction intervals are calculated using the methods described in Section \@ref(sec-7-ETS).
+The resulting forecasts look sensible with increasing trend, and relatively wide prediction intervals reflecting the variation in the historical data. The prediction intervals are calculated using the methods described in Section \@ref(ets).
 
 
-##Holt-Winters' seasonal method {#sec-7-Taxonomy}
+##Holt-Winters' seasonal method {#holt-winters}
 
 @Holt57 and @Winters60 extended Holt’s method to capture seasonality. The Holt-Winters seasonal method comprises the forecast equation and three smoothing equations --- one for the level $\ell_t$, one for the trend $b_t$, and one for the seasonal component $s_t$, with corresponding smoothing parameters $\alpha$, $\beta^*$ and $\gamma$. We use $m$ to denote the frequency of the seasonality, i.e., the number of seasons in a year. For example, for quarterly data $m=4$, and for monthly data $m=12$.
 
@@ -487,7 +487,7 @@ autoplot(hyndsight) +
 ```
 
 
-##A taxonomy of exponential smoothing methods {#sec-7-6-Taxonomy}
+##A taxonomy of exponential smoothing methods {#taxonomy}
 
 Exponential smoothing methods are not restricted to those we have presented so far. By considering variations in the combinations of the trend and seasonal components, nine exponential smoothing methods are possible, listed in Table \@ref(tab:taxonomy). Each method is labelled by a pair of letters (T,S) defining the type of ‘Trend’ and ‘Seasonal’ components. For example, (A,M) is the method with an additive trend and multiplicative seasonality; (A<sub>d</sub>,N) is the method with damped trend and no seasonality; and so on.
 
@@ -531,7 +531,7 @@ knitr::include_graphics("pegelstable.png")
 ```
 ------------------------------------
 
-##Innovations state space models for exponential smoothing {#sec-7-ETS}
+##Innovations state space models for exponential smoothing {#ets}
 
 In the rest of this chapter, we study the statistical models that underlie the exponential smoothing methods we have considered so far. The exponential smoothing methods presented in Table \@ref(tab:pegels) are algorithms which generate point forecasts. The statistical models in this section generate the same point forecasts, but can also generate prediction (or forecast) intervals. A statistical model is a stochastic (or random) data generating process that can produce an entire forecast distribution. The general statistical framework we will introduce also provides a way of using the model selection criteria introduced in Chapter \@ref(regression), thus allowing the choice of model to be made in an objective manner.
 
@@ -636,7 +636,7 @@ Another way to view the parameters is through a consideration of the mathematica
 
 ### Model selection {-}
 
-A great advantage of the ETS statistical framework is that information criteria can be used for model selection. The AIC, AIC$_{\text{c}}$ and BIC, introduced in Section \@ref(Regr-SelectingPredictors), can be used here to determine which of the ETS models is most appropriate for a given time series.
+A great advantage of the ETS statistical framework is that information criteria can be used for model selection. The AIC, AIC$_{\text{c}}$ and BIC, introduced in Section \@ref(selecting-predictors), can be used here to determine which of the ETS models is most appropriate for a given time series.
 
 For ETS models, Akaike’s Information Criterion (AIC) is defined as
 $$
@@ -855,7 +855,7 @@ For a few ETS models, there are no known formulas for prediction intervals. In t
 
 A useful way to improve forecast accuracy is to generate multiple versions of the time series with slight variations. Then forecast from each of these additional time series, and average the resulting forecasts. This is called "bagging" which stands for "**b**ootstrap **agg**regatin**g**". The additional time series are bootstrapped versions of the original series, and we aggregate the results to get a better forecast.
 
-We can combine STL decomposition and ETS model to get bagged ETS forecasts. First, the time series is Box-Cox-transformed, and then decomposed into trend, seasonal and remainder components using STL. Then we obtain shuffled versions of the remainder component to get bootstrapped remainder series. Because there may be autocorrelation present in an STL remainder series, we cannot simply use the re-draw procedure that was described in Section \@ref(sec:PI). Instead, we use a "blocked bootstrap", where contiguous sections of the time series are selected at random and joined together. These bootstrapped remainder series are added to the trend and seasonal components, and the Box-Cox transformation is reversed to give variations on the original time series. Some examples are shown below for the Australian international tourist data.
+We can combine STL decomposition and ETS model to get bagged ETS forecasts. First, the time series is Box-Cox-transformed, and then decomposed into trend, seasonal and remainder components using STL. Then we obtain shuffled versions of the remainder component to get bootstrapped remainder series. Because there may be autocorrelation present in an STL remainder series, we cannot simply use the re-draw procedure that was described in Section \@ref(prediction-intervals). Instead, we use a "blocked bootstrap", where contiguous sections of the time series are selected at random and joined together. These bootstrapped remainder series are added to the trend and seasonal components, and the Box-Cox transformation is reversed to give variations on the original time series. Some examples are shown below for the Australian international tourist data.
 
 ```{r baggedts, echo=FALSE, message=FALSE, warning=FALSE, dependson="austouristets",  fig.cap="Ten bootstrapped versions of quarterly Australian tourist arrivals."}
 set.seed(7)
@@ -901,7 +901,7 @@ By default, 100 bootstrapped series are used, and the length of the blocks used 
 In this case, it makes very little difference. @baggedETS show that, on average, it gives better forecasts than just applying `ets` directly. Of course, it is slower because a lot more computation is required.
 
 
-## Exercises
+## Exercises {#expsmooth-exercises}
 
 1. Consider the `pigs` series --- the number of pigs slaughtered in Victoria each month.
     a. Use the `ses` function in R to find the optimal values of $\alpha$ and $\ell_0$, and generate forecasts for the next four months.
@@ -932,12 +932,12 @@ days’ sales for paperback and hardcover books.
 
     Which model gives the best RMSE?
 
-8. Recall your retail time series data  (from Exercise 3 in Section \@ref(ex-graphics)).
+8. Recall your retail time series data  (from Exercise 3 in Section \@ref(graphics-exercises)).
     a. Why is multiplicative seasonality necessary for this series?
     b. Apply Holt-Winters’ multiplicative method to the data. Experiment with making the trend damped.
     c. Compare the RMSE of the one-step forecasts from the two methods. Which do you prefer?
     d. Check that the residuals from the best method look like white noise.
-    e. Now find the test set RMSE, while training the model to the end of 2010. Can you beat the seasonal naïve approach from Exercise 7 in Section \@ref(ex-toolbox)?
+    e. Now find the test set RMSE, while training the model to the end of 2010. Can you beat the seasonal naïve approach from Exercise 7 in Section \@ref(toolbox-exercises)?
 
 9. For the same retail data, try an STL decomposition applied to the Box-Cox transformed series, followed by ETS on the seasonally adjusted data. How does that compare with your best previous forecasts on the test set?
 
@@ -985,6 +985,6 @@ days’ sales for paperback and hardcover books.
 
     b. Find an example where it does not work well. Can you figure out why?
 
-## Further reading
+## Further reading {#expsmooth-reading}
 
 Two articles by Ev Gardner [@Gar1985;@Gar2006] provide a great overview of the history of exponential smoothing, and its many variations. A full book treatment of the subject providing the mathematical details is given by @expsmooth08.

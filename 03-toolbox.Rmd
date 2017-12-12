@@ -4,7 +4,7 @@ In this chapter, we discuss some general tools that are useful for many differen
 
 Each of the tools discussed in this chapter will be used repeatedly in subsequent chapters as we develop and explore a range of forecasting methods.
 
-## Some simple forecasting methods {#sec-2-methods}
+## Some simple forecasting methods {#simple-methods}
 
 Some forecasting methods are very simple and surprisingly effective. Here are four methods that we will use as benchmarks for other forecasting methods.
 
@@ -95,7 +95,7 @@ autoplot(dj2) +
 
 Sometimes one of these simple methods will be the best forecasting method available; but in many cases, these methods will serve as benchmarks rather than the method of choice. That is, any forecasting methods we develop will be compared to these simple methods to ensure that the new method is better than these simple alternatives. If not, the new method is not worth considering.
 
-## Transformations and adjustments {#sec-transformations}
+## Transformations and adjustments {#transformations}
 
 Adjusting the historical data can often lead to a simpler forecasting model. Here, we deal with four kinds of adjustments: calendar adjustments, population adjustments, inflation adjustments and mathematical transformations. The purpose of these adjustments and transformations is to simplify the patterns in the historical data by removing known sources of variation or by making the pattern more consistent across the whole data set. Simpler patterns usually lead to more accurate forecasts.
 
@@ -253,7 +253,7 @@ In addition to these essential properties, it is useful (but not necessary) for 
   3. The residuals have constant variance.
   4. The residuals are normally distributed.
 
-These two properties make the calculation of prediction intervals easier (see Section \@ref(sec:PI) for an example). However, a forecasting method that does not satisfy these properties cannot necessarily be improved. Sometimes applying a Box-Cox transformation  may assist with these properties, but otherwise there is usually little that you can do to ensure that your residuals have constant variance and a normal distribution. Instead, an alternative approach to obtaining prediction intervals is necessary. Again, we will not address how to do this until later in the book.
+These two properties make the calculation of prediction intervals easier (see Section \@ref(prediction-intervals) for an example). However, a forecasting method that does not satisfy these properties cannot necessarily be improved. Sometimes applying a Box-Cox transformation  may assist with these properties, but otherwise there is usually little that you can do to ensure that your residuals have constant variance and a normal distribution. Instead, an alternative approach to obtaining prediction intervals is necessary. Again, we will not address how to do this until later in the book.
 
 ###Example: Forecasting the Dow-Jones Index {-}
 
@@ -624,9 +624,9 @@ data.frame(h = 1:8, MSE = mse) %>%
   ggplot(aes(x = h, y = MSE)) + geom_point()
 ```
 
-## Prediction intervals {#sec:PI}
+## Prediction intervals {#prediction-intervals}
 
-As discussed in Section \@ref(sec-perspective), a prediction interval gives an interval within which we expect $y_{t}$ to lie with a specified probability. For example, assuming that the forecast errors are normally distributed, a 95% prediction interval for the $h$-step forecast is
+As discussed in Section \@ref(perspective), a prediction interval gives an interval within which we expect $y_{t}$ to lie with a specified probability. For example, assuming that the forecast errors are normally distributed, a 95% prediction interval for the $h$-step forecast is
 $$
   \hat{y}_{T+h|T} \pm 1.96 \hat\sigma_h,
 $$
@@ -781,7 +781,7 @@ forecast(ausbeer)
 
 That works quite well if you have no idea what sort of model to use. But by the end of this book, you should not need to use `forecast()` in this "blind" fashion. Instead, you will fit a model appropriate to the data, and then use `forecast()` to produce forecasts from that model.
 
-## Exercises {#ex-toolbox}
+## Exercises {#toolbox-exercises}
 
 1. For the following series, find an appropriate Box-Cox transformation in order to stabilize the variance.
 
@@ -792,7 +792,7 @@ That works quite well if you have no idea what sort of model to use. But by the 
 
 2. Why is a Box-Cox transformation unhelpful for the `cangas` data?
 
-3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section \@ref(ex-graphics))?
+3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section \@ref(graphics-exercises))?
 
 4. Calculate the residuals from a seasonal naïve forecast applied to the quarterly Australian beer production data from 1992. The following code will help.
 
@@ -822,7 +822,7 @@ That works quite well if you have no idea what sort of model to use. But by the 
     d. If your model doesn’t forecast well, you should make it more complicated.
     e. Always choose the model with the best forecast accuracy as measured on the test set.
 
-7. For your retail time series (from Exercise 3 in Section \@ref(ex-graphics)):
+7. For your retail time series (from Exercise 3 in Section \@ref(graphics-exercises)):
 
     a. Split the data into two parts using
 
@@ -887,7 +887,7 @@ That works quite well if you have no idea what sort of model to use. But by the 
     c.  Try using various benchmark methods to forecast the training set and compare the results on the test set. Which method did best?
     d. Check the residuals of your preferred method. Do they resemble white noise?
 
-## Further reading
+## Further reading {#toolbox-reading}
 
  * @Ord2012 provides further discussion of simple benchmark forecasting methods.
  * A review of forecast evaluation methods is given in @HK06, looking at the strengths and weakenesses of different approaches. This is the paper that introduced the MASE as a general-purpose forecast accuracy measure.

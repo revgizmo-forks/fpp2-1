@@ -6,7 +6,7 @@ In Section \@ref(tspatterns) we discussed three types of time series patterns: t
 
 In this chapter, we consider some common  methods for extracting these components from a time series. Often this is done to help improve understanding of the time series, but it can also be used to improve forecasts.
 
-## Time series components {#sec-6-1-TSpatterns}
+## Time series components {#components}
 
 If we assume an additive model, then we can write
 $$
@@ -42,7 +42,7 @@ xlab("Year") + ylab("New orders index") +
 
 Figure \@ref(fig:elecequip-trend) shows the trend-cycle component, $T_t$, in red and the original data, $y_t$, in grey. The trend-cycle shows the overall movement in the series, ignoring the seasonality and any small random fluctuations.
 
-Figure \@ref(fig:elecequip-stl) shows an additive decomposition of these data. The method used for estimating components in this example is STL, which is discussed in Section \@ref(sec-6-stl).
+Figure \@ref(fig:elecequip-stl) shows an additive decomposition of these data. The method used for estimating components in this example is STL, which is discussed in Section \@ref(stl).
 
 ```{r elecequip-stl, fig.cap="The electricial equipment orders (top) and its three additive components.", fig.asp=0.9, echo=FALSE}
 autoplot(fit) + xlab("Year")
@@ -71,7 +71,7 @@ If the variation due to seasonality is not of primary interest, the seasonally a
 
 Seasonally adjusted series contain the remainder component as well as the trend-cycle. Therefore, they are not "smooth", and "downturns" or "upturns" can be misleading. If the purpose is to look for turning points in the series, and interpret any changes in the series, then it is better to use the trend-cycle component rather than the seasonally adjusted data.
 
-##Moving averages
+##Moving averages {#moving-averages}
 
 The classical method of time series decomposition originated in the 1920s and was widely used until the 1950s. It still forms the basis of many time series decomposition methods, so it is important to understand how it works. The first step in a classical decomposition is to use a moving average method to estimate the trend-cycle, so we begin by discussing moving averages.
 
@@ -256,7 +256,7 @@ out
 
 
 
-##Classical decomposition
+##Classical decomposition {#classical-decomposition}
 
 The classical decomposition method originated in the 1920s. It is a relatively simple procedure, and forms the starting point for most other methods of time series decomposition. There are two forms of classical decomposition: an additive decomposition and a multiplicative decomposition. These are described below for a time series with seasonal period $m$ (e.g., $m=4$ for quarterly data, $m=12$ for monthly data, $m=7$ for daily data with a weekly pattern).
 
@@ -318,7 +318,7 @@ While classical decomposition is still widely used, it is not recommended, as th
 
 - Occasionally, the values of the time series in a small number of periods may be particularly unusual. For example, the monthly air passenger traffic may be affected by an industrial dispute, making the traffic during the dispute very different from usual. The classical method is not robust to these kinds of unusual values.
 
-## X11 decomposition
+## X11 decomposition {#x11}
 
 Another popular method for decomposing quarterly and monthly data is the X11 method which originated in the US Census Bureau and Statistics Canada.
 
@@ -363,7 +363,7 @@ ggsubseriesplot(seasonal(fit)) + ylab("Seasonal")
 
 
 
-## SEATS decomposition
+## SEATS decomposition {#seats}
 
 "SEATS" stands for "Seasonal Extraction in ARIMA Time Series" (ARIMA models are discussed in Chapter \@ref(arima)). This procedure was developed at the Bank of Spain, and is now widely used by government agencies around the world. The procedure works only with quarterly and monthly data. So seasonality of other kinds, such as daily data, or hourly data, or weekly data, require an alternative approach.
 
@@ -382,7 +382,7 @@ As with the X11 method, we  can use the  `seasonal()`,  `trendcycle()` and `rema
 
 The `seasonal` package has many options for handling variations of X11 and SEATS. See [the package website](http://www.seasonal.website/seasonal.html) for a detailed introduction to the options and features available.
 
-## STL decomposition {#sec-6-stl}
+## STL decomposition {#stl}
 
 STL is a very versatile and robust method for decomposing time series. STL is an acronym for “Seasonal and Trend decomposition using Loess”, while Loess is a method for estimating nonlinear relationships. The STL method was developed by @Cleveland1990.
 
@@ -413,7 +413,7 @@ The two main parameters to be chosen when using STL are the trend-cycle window (
 As with the other decomposition methods discussed in this book, to obtain the separate components plotted in Figure \@ref(fig:classical-elecequip), use the `seasonal()` function for the seasonal component, the `trendcycle()` function for trend-cycle component, and the `remainder()` function for the remainder component.  The `seasadj()` function can be used to compute the seasonally adjusted series.
 
 
-## Forecasting with decomposition
+## Forecasting with decomposition {#forecasting-decomposition}
 
 While decomposition is primarily useful for studying time series data, and exploring the historical changes over time, it can also be used in forecasting.
 
@@ -465,7 +465,7 @@ The `stlf` function uses default values for `s.window` and `t.window`.
 
 As well as the naïve method, several other possible forecasting methods are available with `stlf`, as described in the corresponding help file. If `method` is not specified, it will use the ETS approach (discussed in the next chapter) applied to the seasonally adjusted series. This usually produces quite good forecasts for seasonal time series, and some companies use it routinely for all their operational forecasts.
 
-## Exercises
+## Exercises {#decomposition-exercises}
 
 1. Show that a $3\times5$ MA is equivalent to a 7-term weighted moving average with weights of 0.067, 0.133, 0.200, 0.200, 0.200, 0.133, and 0.067.
 
@@ -477,7 +477,7 @@ As well as the naïve method, several other possible forecasting methods are ava
     (e) Change one observation to be an outlier (e.g., add 500 to one observation), and recompute the seasonally adjusted data. What is the effect of the outlier?
     (f) Does it make any difference if the outlier is near the end rather than in the middle of the time series?
 
-3. Recall your retail time series data  (from Exercise 3 in Section \@ref(ex-graphics)).
+3. Recall your retail time series data  (from Exercise 3 in Section \@ref(graphics-exercises)).
    Decompose the series using X11. Does it reveal any outliers, or unusual features that you had not noticed previously?
 
 4. Figures \@ref(fig:labour) and \@ref(fig:labour2) shows the result of decomposing the number of persons in the civilian labor force in Australia each month from February 1978 to August 1995.
@@ -513,6 +513,6 @@ As well as the naïve method, several other possible forecasting methods are ava
 
 8. Use `stlf` to produce forecasts of the `fancy` series with either `method="naive"` or `method="rwdrift"`, whichever is most appropriate. Use the `lambda` argument if you think a Box-Cox transformation is required.
 
-## Further reading
+## Further reading {#decomposition-reading}
 
 A detailed modern discussion of SEATS and X11 decomposition methods is provided by @Dagum2016. @Cleveland1990 introduced STL, and still provides the best description of the algorithm. For a discussion of forecasting using STL, see @Theodosiou2011.

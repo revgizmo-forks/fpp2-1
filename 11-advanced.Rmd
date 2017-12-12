@@ -303,9 +303,9 @@ Because it is a little slow, `PI=FALSE` is the default, so prediction intervals 
 
 
 
-## Exercises {#ex-advanced}
+## Exercises {#advanced-exercises}
 
-1. Use the `tbats()`` function to model your retail time series.
+1. Use the `tbats()` function to model your retail time series.
     a. Check the residuals and produce forecasts.
     b. Does this completely automated approach work for these data?
     c. Have you saved any degrees of freedom by using Fourier terms rather than seasonal differencing?
@@ -317,3 +317,5 @@ Because it is a little slow, `PI=FALSE` is the default, so prediction intervals 
     c. Could you model these data using any of the other methods we have considered in this book?
 
 3. Experiment with using `nnetar()` on your retail data and other data we have considered in previous chapters.
+
+## Further reading {#advanced-reading}

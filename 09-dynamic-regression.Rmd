@@ -126,7 +126,7 @@ autoplot(fcast) + xlab("Year") +
   ylab("Percentage change")
 ```
 
-The prediction intervals for this model are narrower than those for the model developed in Section \@ref(sec:nonseasonalarima) because we are now able to explain some of the variation in the data using the income predictor.
+The prediction intervals for this model are narrower than those for the model developed in Section \@ref(non-seasonal-arima) because we are now able to explain some of the variation in the data using the income predictor.
 
 It is important to realise that the prediction intervals from regression models (with or without ARIMA errors) do not take into account the uncertainty in the forecasts of the predictors. So they should be interpreted as being conditional on the assumed (or estimated) future values of the predictor variables.
 
@@ -153,7 +153,7 @@ autoplot(elecdaily[,c("Demand","Temperature")],
 
 In this example, we fit a quadratic regression model with ARMA errors using the `auto.arima` function. Using the estimated model we forecast 14 days ahead starting from Thursday 1 January 2015 (a non-work-day being a public holiday for New Years Day). 
 
-In this case, we could obtain weather forecasts from the weather bureau for the next 14 days. But for the sake of illustration, we will use scenario based forecasting (as introduced in Section \@ref(Regr-ForeWithRegr)) where we set the temperature for the next 14 days to a constant 26 degrees. 
+In this case, we could obtain weather forecasts from the weather bureau for the next 14 days. But for the sake of illustration, we will use scenario based forecasting (as introduced in Section \@ref(forecasting-with-regression)) where we set the temperature for the next 14 days to a constant 26 degrees. 
 
 ```{r elecdailyfit}
 xreg <- cbind(MaxTemp = elecdaily[, "Temperature"], 
@@ -267,7 +267,7 @@ autoplot(austa) +
 
 There is an implicit assumption with deterministic trends that the slope of the trend is not going to change over time. On the other hand, stochastic trends can change, and the estimated growth is only assumed to be the average growth over the historical period, not necessarily the rate of growth that will be observed into the future. Consequently, it is safer to forecast with stochastic trends, especially for longer forecast horizons, as the prediction intervals allow for greater uncertainty in future growth.
 
-## Dynamic harmonic regression {#sec-dhr}
+## Dynamic harmonic regression {#dhr}
 
 When there are long seasonal periods, a dynamic regression with Fourier terms is often better than other models we have considered in this book.
 
@@ -395,7 +395,7 @@ autoplot(fc8) + ylab("Quotes") +
 
  -->
 
-## Exercises
+## Exercises {#dynamic-exercises}
 
 
 1.  Consider monthly sales and advertising data for an automotive parts company (data set `advert`).
@@ -422,7 +422,7 @@ autoplot(fc8) + ylab("Quotes") +
     d. Fit an appropriate regression model with ARIMA errors. Explain your reasoning in arriving at the final model.
     e. Forecast the average price per room for the next twelve months using your fitted model. (Hint: You will need to produce forecasts of the CPI figures first.)
 
-4. We fitted a harmonic regression model to part of the `gasoline` series in Exercise 6 in Section \@ref(Regr-exercises). We will now revisit this model, and extend it to include more data and ARMA errors.
+4. We fitted a harmonic regression model to part of the `gasoline` series in Exercise 6 in Section \@ref(regression-exercises). We will now revisit this model, and extend it to include more data and ARMA errors.
     a. Using `tslm`, fit a harmonic regression with a piecewise linear time trend to the full `gasoline` series. Select the position of the knots in the trend and the appropriate number of Fourier terms to include by minimizing the AICc or CV value.
     b. Now refit the model using `auto.arima` to allow for correlated errors, keeping the same predictor variables as you used with `tslm`.
     c. Check the residuals of the final model using the `checkresiduals()` function. Do they look sufficiently like white noise to continue? If not, try modifying your model, or removing the first few years of data.
@@ -462,7 +462,7 @@ autoplot(fc8) + ylab("Quotes") +
     b. Check the residuals of the fitted model. Does the residual series look like white noise?
     c. Compare the forecasts with those you obtained earlier using alternative models.
 
-## Further reading
+## Further reading {#dynamic-reading}
 
 A detailed discussion of dynamic regression models is provided in @Pankratz91. A generalization of dynamic regression models, known as "transfer function models", is discussed in @BJRL15.
 

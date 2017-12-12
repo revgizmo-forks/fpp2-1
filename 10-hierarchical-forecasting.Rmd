@@ -2,7 +2,7 @@
 
 *Warning: this is a more advanced section and assumes knowledge of some basic matrix algebra. We have however tried to simplify and explain in as much as detail as possible all the notation used starting from basic concepts and building up.*
 
-In this chapter we discuss forecasting large collections of time series that follow either a hierarchical or grouped aggregation structure. We clasify these as hierarchical or grouped time series in Sections \@ref(Hier:hierarchical-ts) and \@ref(Hier:grouped-ts) respectively. The challenge is that we require forecasts that are **coherent** across the aggregation structure. I.e., forecasts that add up in a manner consistent with the aggregation structure the collection of time series follow. Commonly used approaches are based on selecting a single level of aggregation, generating forecasts at that level and then combining these to produce coherent forecasts for the other time series. These approaches are presented in Sections \@ref(Hier:bu)-\@ref(Hier:mo). In Section \@ref(Hier:reconciliation) we introduce the concept of reconciliation where forecasts of all the times series in the collection are first generated and these are then reconciled so that they become coherent. This appraoch has the advantage that it incorporates information and the correlation structure across all the series in the collection.
+In this chapter we discuss forecasting large collections of time series that follow either a hierarchical or grouped aggregation structure. We clasify these as hierarchical or grouped time series in Sections \@ref(hts) and \@ref(gts) respectively. The challenge is that we require forecasts that are **coherent** across the aggregation structure. I.e., forecasts that add up in a manner consistent with the aggregation structure the collection of time series follow. Commonly used approaches are based on selecting a single level of aggregation, generating forecasts at that level and then combining these to produce coherent forecasts for the other time series. These approaches are presented in Sections \@ref(bottom-up)-\@ref(middle-out). In Section \@ref(reconciliation) we introduce the concept of reconciliation where forecasts of all the times series in the collection are first generated and these are then reconciled so that they become coherent. This appraoch has the advantage that it incorporates information and the correlation structure across all the series in the collection.
 
 ### The hts package {-}
 
@@ -18,25 +18,25 @@ weights = c("wls", "ols", "mint", "nseries"), ...)
 We explain each of the arguments in the sections that follow in detail. Below is a brief introduction.
 
 `object`
-:   A hierarchical or grouped time series object to be forecast. We present how to generate a hierarchical time series object in Section \@ref(Hier:hierarchical-ts) and a grouped time series object in Section \@ref(Hier:grouped-ts) using the `hts` function. 
+:   A hierarchical or grouped time series object to be forecast. We present how to generate a hierarchical time series object in Section \@ref(hts) and a grouped time series object in Section \@ref(gts) using the `hts` function. 
 
 `fmethod`
-:   The forecasting model used for generating base forecasts. Possible values are `"ets"`, `"arima"` and `rw`. These models have been studied in Chapters \@ref(expsmooth), \@ref(arima) and \@ref(toolbox) respectively. What is meant by base forecasts becomes clear in Section  \@ref(Hier:base-coherent-forecasts). 
+:   The forecasting model used for generating base forecasts. Possible values are `"ets"`, `"arima"` and `rw`. These models have been studied in Chapters \@ref(expsmooth), \@ref(arima) and \@ref(toolbox) respectively. What is meant by base forecasts becomes clear in Section  \@ref(coherent-forecasts). 
 
 `method`
-:   The method used for generating coherent forecasts. The possible values this argument can take are explained in Sections \@ref(Hier:bu)-\@ref(Hier:reconciliation).
+:   The method used for generating coherent forecasts. The possible values this argument can take are explained in Sections \@ref(bottom-up)-\@ref(reconciliation).
 
 `weights`
-:   Weight associated with the reconcilication approach presented in Section \@ref(Hier:reconciliation). 
+:   Weight associated with the reconcilication approach presented in Section \@ref(reconciliation). 
 
 
-## Hierarchical time series {#Hier:hierarchical-ts}
+## Hierarchical time series {#hts}
 
 Time series can often be naturally disaggregated by various attributes of interest. For example, the total number of bicycles sold by a cycling manufacturer can be disaggregated by product type such as: road bikes, mountain bikes, children bikes and hybrids. Each of these can be disaggregated into finer categories. For example children’s bikes can be divided into balance bikes for children under the age of four, single speed bikes for children between the ages of four and six and other bikes for children over the age of six. Hybrid bikes can be divided into city, commuting, comfort, and trekking bikes; and so on. Such a collection of time series follow a hierarchical aggregation structure and we refer to these as *hierarchical time series*.
 
 Commonly found in business and economics are hierarchical time series based on geographical locations. For example the total sales of a manufacturing company can be disaggregated by country, then within each country by state, within each state by region and so on down to the outlet level.
 
-A feature that distinguishes hierarchical time series (from grouped time series that follow in Section \@ref(Hier:grouped-ts)) is that they have a unique structure with which they aggregate. Figure \@ref(fig:HierTree) shows a $K=2$-level hierarchical structure. At the top of the hierarchy, at level 0, is the "Total", the most aggregate level of the data. We denote as $y_t$ the $t$th observation of the "Total" series for $t=1,\dots,T$. The "Total" is disaggregated into two series at level 1 and each of these into three and two series respectively at the bottom-level of the hierarchy. Below the top most aggregate level, we denote as $\y{j}{t}$ the $t$th observation of the series which corresponds to node $j$. For example $y_{A,t}$ denotes the $t$th observation of the series corresponding to node A at level 1, $y_{AB,t}$ denotes the $t$th observation of the series corresponding to node AB at level 2, and so on.
+A feature that distinguishes hierarchical time series (from grouped time series that follow in Section \@ref(gts)) is that they have a unique structure with which they aggregate. Figure \@ref(fig:HierTree) shows a $K=2$-level hierarchical structure. At the top of the hierarchy, at level 0, is the "Total", the most aggregate level of the data. We denote as $y_t$ the $t$th observation of the "Total" series for $t=1,\dots,T$. The "Total" is disaggregated into two series at level 1 and each of these into three and two series respectively at the bottom-level of the hierarchy. Below the top most aggregate level, we denote as $\y{j}{t}$ the $t$th observation of the series which corresponds to node $j$. For example $y_{A,t}$ denotes the $t$th observation of the series corresponding to node A at level 1, $y_{AB,t}$ denotes the $t$th observation of the series corresponding to node AB at level 2, and so on.
 
 The total number of series in the hierarchy is $n=1+2+5=8$. We denote as $m$ the number of series at the bottom-level, a dimension that is important in what follows. In this case $m=5$. Note that always $n>m$.
 
@@ -180,7 +180,7 @@ gridExtra::grid.arrange(plotsL2[[1]],plotsL2[[2]],plotsL2[[3]],
 
 ```
 
-## Grouped time series {#Hier:grouped-ts}
+## Grouped time series {#gts}
 
 Another possibility is that series can be naturally grouped together based on attributes without necessarily imposing a hierarchical structure. For example the bicycles sold by the warehouse can be for males, females or unisex. Frames can be carbon, aluminium or steel. They can be single speed or have multiple gears. We can also get a similar structure when we combine two hierarchical structures. For example the bicycle manufacturer may disaggregate sales by product and also by geographical location. We refer to these as *grouped time series*. With grouped time series we still have a hierarchical structure however the structure does not naturally disaggregate in a unique way. For example we can disaggregate the bicycles by product type and then geographical location but also vice versa.
 
@@ -411,11 +411,11 @@ ggplot(data = prisonLF, aes(x = quarter, y = count, group = interaction(legal, g
 ```
 
 
-## Base and coherent forecasts {#Hier:base-coherent-forecasts}
+## Base and coherent forecasts {#coherent-forecasts}
 
 The aim is to generate a set of coherent forecasts across all the series of a hierarchical or a grouped structure.
 
-Commonly used approaches are based on first generating forecasts for a single level of aggregation, and then producing coherent forecasts by aggregating these up using a bottom-up approach, disaggregating them down using a top-down approach, or a combination of the two using a middle-out approach. The details of these methods are presented in Sections \@ref(Hier:bu) to \@ref(Hier:mo). An alternative and a more advnanced approach is to first generate forecasts for all the time series and then reconcile these so that they become coherent. The details of this approach which we refer to as the optimal reconciliation approach are presented in Section \@ref(Hier:reconciliation).
+Commonly used approaches are based on first generating forecasts for a single level of aggregation, and then producing coherent forecasts by aggregating these up using a bottom-up approach, disaggregating them down using a top-down approach, or a combination of the two using a middle-out approach. The details of these methods are presented in Sections \@ref(bottom-up) to \@ref(middle-out). An alternative and a more advnanced approach is to first generate forecasts for all the time series and then reconcile these so that they become coherent. The details of this approach which we refer to as the optimal reconciliation approach are presented in Section \@ref(reconciliation).
 
 In what follows in this section we introduce and formally define the concepts of base and coherent forecasts in order to build a unified framework that incorporates all of the approaches outlined above for both hierarchical and grouped time series.
 
@@ -429,7 +429,7 @@ Although the data follows exactly the aggregation structure (as reflected by the
 
 The base forecasts can however be combined, as briefly described above, to produce a set of forecasts that are coherent. We denote the set of **coherent forecasts** for the "Total" series and all series below the top-level as $\tilde{y}_{h}$ and $\ytilde{j}{h}$ respectively.
 
-## The bottom-up approach {#Hier:bu}
+## The bottom-up approach {#bottom-up}
 
 A commonly applied method for generating coherent forecasts is the bottom-up approach. This approach involves first generating  base forecasts for each series at the bottom-level and then aggregating these upwards to produce forecasts for all the series in the structure.
 
@@ -484,7 +484,7 @@ forecast(..., method = "bu", ...).
 
 
 
-## Top-down approaches {#Hier:td}
+## Top-down approaches {#top-down}
 
 Top-down approaches involve first generating forecasts for the "Total" series $y_t$ on the top of the aggregation structure and then disaggregating these downwards. We let $p_1,\dots,p_{m}$ be a set of proportions which dictate how the base forecasts of the "Total" series are to be distributed to revised forecasts for each series at the bottom-level of the structure. For example for the hierarchy of Figure \@ref(fig:HierTree) using proportions $p_1,\dots,p_{5}$ we get, 
 $$
@@ -566,7 +566,7 @@ forecast(..., method = "tdfp", ...).
 ```
 
 
-## Middle-out approach {#Hier:mo}
+## Middle-out approach {#middle-out}
 
 The middle-out approach combines bottom-up and top-down approaches. First the "middle level" is chosen and base forecasts are generated for all the series of this level. For the series above the middle level, coherent forecasts are generated using the bottom-up approach by aggregating the "middle-level" base forecasts upwards. For the series below the "middle level", coherent forecasts are generated using a top-down approach by disaggregating the "middle level" base forecasts downwards.
 
@@ -575,7 +575,7 @@ This approach is implemented in the `forecast` package by setting
 forecast(..., method = "mo",...). 
 ```
 
-## The projection matrix {#Hier:projection}
+## The projection matrix {#hierarchical-projection}
 
 Denote as $\bm{\hat{y}}_h$ a set of $h$-step-ahead base forecasts generated for each series in a hierarchial or grouped structure and stacked the same way as the data. For example for the hierarchy of Figure \@ref(fig:HierTree)
 $$
@@ -623,7 +623,7 @@ The first column includes a set of proportions that distribute the base forecast
 
 For a middle out approach the $\bm{P}$ matrix will be a combination of the above two. Using a set of proportions, the base forecasts of some pre-chosen level will be disaggregated to the bottom-level to then be summed up the hierarchy with the summing matrix, with all other base forecasts being zeroed out.
 
-## The optimal reconciliation approach {#Hier:reconciliation}
+## The optimal reconciliation approach {#reconciliation}
 
 All the approaches we have considered so far in this chapter involve choosing a particular level in the aggregation structure, generating base forecasts for that level, and then either aggregating these up or disaggregating them down to generate coherent forecasts for the rest of the series. The above examples clearly reflect this through the $\bm{P}$ matrix.
 
@@ -650,7 +650,7 @@ Note that the MinT estimator involves $\bm{W}_h$ the forecast error variance of 
     ```r
     forecast(..., method = "comb", weights = "ols", ...). 
     ```
-    The weights here are referred to as the OLS (ordinary least squares) estimator as setting $\bm{W}_h=k_h\bm{I}$ in \@ref(eq:MinT) gives the least squares estimator we introduced in Section \@ref(Regr-MatrixEquations) with $\bm{X}=\bm{S}$ and $\bm{y}=\hat{\bm{y}}$.
+    The weights here are referred to as the OLS (ordinary least squares) estimator as setting $\bm{W}_h=k_h\bm{I}$ in \@ref(eq:MinT) gives the least squares estimator we introduced in Section \@ref(regression-matrices) with $\bm{X}=\bm{S}$ and $\bm{y}=\hat{\bm{y}}$.
     
 2. Set $\bm{W}_{h} = k_{h}\text{diag}(\hat{\bm{W}}_{1})$ $\forall h$ where $k_{h} > 0$ and
     \[
@@ -746,7 +746,7 @@ knitr::kable(tab, digits=2, booktabs=TRUE)
 
 
 
-## Exercises {#ex:hierarchical}
+## Exercises {#hierarchical-exercises}
 
 1. Write out the $\bm{S}$ matrices for the Australian tourism hierarchy and the Australian prison grouped structure. Use the `smatrix` command to verify your answers. 
 
@@ -760,7 +760,7 @@ knitr::kable(tab, digits=2, booktabs=TRUE)
 
 6. Define as a test-set the last two years of the `vn2` Australian domestic tourism data. Generate, bottom-up, top-down and optimally reconciled forecasts for this period and compare their forecasts accuracy. 
 
-## Further reading
+## Further reading {#hierarchical-reading}
 
 @HynAth2014, @AthEtAl2009 and @GroSoh1990 provide a good introduction to this framework. @Mint procides the latest develpoments in terms of the optimal reconciliation approach. @AthEtAl2017 expands using this framework in the time dimension with temporal hierarchies. 
   

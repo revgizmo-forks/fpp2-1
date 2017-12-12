@@ -39,7 +39,7 @@ Many people wrongly assume that forecasts are not possible in a changing environ
 
 Forecasting situations vary widely in their time horizons, factors determining actual outcomes, types of data patterns, and many other aspects. Forecasting methods can be very simple, such as using the most recent observation as a forecast (which is called the “naïve method”), or highly complex, such as neural nets and econometric systems of simultaneous equations. Sometimes, there will be no data available at all. For example, we may wish to forecast the sales of a new product in its first year, but there are obviously no data to work with. In situations like this, we use judgmental forecasting, discussed in Chapter \@ref(judgmental). The choice of method depends on what data are available and the predictability of the quantity to be forecast.
 
-## Forecasting, planning and goals {#sec-1-2-ForPlanGoals}
+## Forecasting, planning and goals {#planning}
 
 Forecasting is a common statistical task in business, where it helps to inform decisions about the scheduling of production, transportation and personnel, and provides a guide to long-term strategic planning. However, business forecasting is often done poorly, and is frequently confused with planning and goals. They are three different things.
 
@@ -81,7 +81,7 @@ It is worth spending time talking to the people who will use the forecasts to en
 
 Once it has been determined what forecasts are required, it is then necessary to find or collect the data on which the forecasts will be based. The data required for forecasting may already exist. These days, a lot of data are recorded, and the forecaster's task is often to identify where and how the required data are stored. The data may include sales records of a company, the historical demand for a product, or the unemployment rate for a geographical region. A large part of a forecaster's time can be spent in locating and collating the available data prior to developing suitable forecasting methods.
 
-## Forecasting data and methods {#Intro-DataAndMethods}
+## Forecasting data and methods {#data-methods}
 
 The appropriate forecasting methods depend largely on what data are available.
 
@@ -184,7 +184,7 @@ In this project, we needed to develop a model for forecasting weekly air passeng
 
 Air passenger numbers are affected by school holidays, major sporting events, advertising campaigns, competition behaviour, etc. School holidays often do not coincide in different Australian cities, and sporting events sometimes move from one city to another. During the period of the historical data, there was a major pilots’ strike during which there was no traffic for several months. A new cut-price airline also launched and folded. Towards the end of the historical data, the airline had trialled a redistribution of some economy class seats to business class, and some business class seats to first class. After several months, however, the seat classifications reverted to the original distribution.
 
-## The basic steps in a forecasting task
+## The basic steps in a forecasting task {#basic-steps}
 
 A forecasting task usually involves five basic steps.
 
@@ -203,7 +203,7 @@ Step 4: Choosing and fitting models.
 Step 5: Using and evaluating a forecasting model.
 :   Once a model has been selected and its parameters estimated, the model is used to make forecasts. The performance of the model can only be properly evaluated after the data for the forecast period have become available. A number of methods have been developed to help in assessing the accuracy of forecasts. There are also organizational issues in using and acting on the forecasts. A brief discussion of some of these issues is given in Chapter \@ref(toolbox).
 
-## The statistical forecasting perspective {#sec-perspective}
+## The statistical forecasting perspective {#perspective}
 
 The thing we are trying to forecast is unknown (or we wouldn’t be forecasting it), and so we can think of it as a *random variable*. For example, the total sales for next month could take a range of possible values, and until we add up the actual sales at the end of the month, we don’t know what the value will be. So until we know the sales for next month, it is a random quantity.
 
@@ -243,14 +243,14 @@ When we talk about the “forecast”, we usually mean the average value of the 
 
 It is often useful to specify exactly what information we have used in calculating the forecast. Then we will write, for example, $\hat{y}_{t|t-1}$ to mean the forecast of $y_t$ taking account of all previous observations $(y_1,\dots,y_{t-1})$. Similarly, $\hat{y}_{T+h|T}$ means the forecast of $y_{T+h}$ taking account of $y_1,\dots,y_T$ (i.e., an $h$-step forecast taking account of all observations up to time $T$).
 
-## Exercises
+## Exercises {#intro-exercises}
 
  1. For cases 3 and 4 in Section \@ref(case-studies), list the possible predictor variables that might be useful, assuming that the relevant data are available.
 
  2. For case 3 in Section \@ref(case-studies), describe the five steps of forecasting in the context of this project.
 
 
-## Further reading
+## Further reading {#intro-reading}
 
  * @Armstrong01 covers the whole field of forecasting, with each chapter written by different experts. It is highly opinionated at times (and we don't agree with everything in it), but is full of excellent general advice on tackling forecasting problems.
 
