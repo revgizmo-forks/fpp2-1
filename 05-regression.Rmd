@@ -532,7 +532,7 @@ Notice that here we divide by $T-k-1$ in order to account for the number of esti
 
 The standard error is related to the size of the average error that the model produces. We can compare this error to the sample mean of $y$ or with the standard deviation of $y$ to gain some perspective on the accuracy of the model.
 
-We should warn here that the evaluation of the standard error can be highly subjective as it is scale dependent. The main reason we introduce it here is that it is required when generating prediction intervals, discussed in Section \@ref(forecasting-with-regression).
+We should warn here that the evaluation of the standard error can be highly subjective as it is scale dependent. The main reason we introduce it here is that it is required when generating prediction intervals, discussed in Section \@ref(forecasting-regression).
 
 ### Spurious regression {-}
 
@@ -712,7 +712,7 @@ to the best possible model, but it almost always leads to a good model. For furt
 We do not discuss statistical inference of the predictors in this book (e.g., looking at $p$-values associated with each predictor). If you do wish to look at the statistical significance of the predictors, beware that *any* procedure involving selecting predictors first will invalidate the assumptions behind the $p$-values. The procedures we recommend for selecting predictors are helpful when the model is used for forecasting; they are not helpful if you wish to study the effect of any predictor on the forecast variable.
 
 
-## Forecasting with regression {#forecasting-with-regression}
+## Forecasting with regression {#forecasting-regression}
 
 Recall that predictions of $y$ can be obtained using equation \@ref(eq:prediction),
 $$  \hat{y_t} = \hat\beta_{0} + \hat\beta_{1} x_{1,t} + \hat\beta_{2} x_{2,t} + \cdots + \hat\beta_{k} x_{k,t},$$

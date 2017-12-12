@@ -153,7 +153,7 @@ autoplot(elecdaily[,c("Demand","Temperature")],
 
 In this example, we fit a quadratic regression model with ARMA errors using the `auto.arima` function. Using the estimated model we forecast 14 days ahead starting from Thursday 1 January 2015 (a non-work-day being a public holiday for New Years Day). 
 
-In this case, we could obtain weather forecasts from the weather bureau for the next 14 days. But for the sake of illustration, we will use scenario based forecasting (as introduced in Section \@ref(forecasting-with-regression)) where we set the temperature for the next 14 days to a constant 26 degrees. 
+In this case, we could obtain weather forecasts from the weather bureau for the next 14 days. But for the sake of illustration, we will use scenario based forecasting (as introduced in Section \@ref(forecasting-regression)) where we set the temperature for the next 14 days to a constant 26 degrees. 
 
 ```{r elecdailyfit}
 xreg <- cbind(MaxTemp = elecdaily[, "Temperature"], 
