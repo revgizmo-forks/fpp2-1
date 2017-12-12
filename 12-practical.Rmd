@@ -183,8 +183,8 @@ autoplot(auscafe) +
   forecast::autolayer(ETS$mean, series="ETS") +
   forecast::autolayer(ARIMA$mean, series="ARIMA") +
   forecast::autolayer(STL$mean, series="STL") +
-  forecast::autolayer(STL$mean, series="NNAR") +
-  forecast::autolayer(STL$mean, series="TBATS") +
+  forecast::autolayer(NNAR$mean, series="NNAR") +
+  forecast::autolayer(TBATS$mean, series="TBATS") +
   forecast::autolayer(Combination, series="Combination") +
   xlab("Year") + ylab("$ billion") +
   ggtitle("Australian monthly expenditure on eating out")
