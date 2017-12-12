@@ -40,7 +40,7 @@ If all of the variables in the model are stationary, then we only need to consid
 where $y'_t=y_t-y_{t-1}$, $x'_{t,i}=x_{t,i}-x_{t-1,i}$ and $n'_t=n_t-n_{t-1}$, which is a regression model in differences with ARMA errors.
 
 
-## Regression with ARIMA errors in R
+## Regression with ARIMA errors in R {#regarima}
 
 The R function `Arima()` will fit a regression model with ARIMA errors if the argument `xreg` is used. The `order` argument specifies the order of the ARIMA error model. If differencing is specified, then the differencing is applied to all variables in the regression model before the model is estimated. For example, the R command
 

@@ -26,6 +26,16 @@ p2 <- autoplot(window(calls, end=4)) +
 gridExtra::grid.arrange(p1,p2)
 ```
 
+### STL with multiple seasonal periods {-}
+
+The `mstl()` function is a variation on `stl()` designed to deal with multiple seasonality. It will return multiple seasonal components, as well as a trend and remainder component. 
+
+```{r callsmstl, fig.cap="Multiple STL for the call volume data."}
+calls %>%
+  mstl() %>%
+  autoplot()
+```
+
 ### Dynamic harmonic regression with multiple seasonal periods {-}
 
 With multiple seasonalities, we can use Fourier terms as we did in earlier chapters. Because there are multiple seasonalities, we need to add Fourier terms for each seasonal period. In this case, the seasonal periods are 169 and 845, so the Fourier terms are of the form
@@ -39,15 +49,15 @@ for $k=1,2,\dots$. The `fourier` function can generate these for you.
 
 We will fit a dynamic regression model with an ARMA error structure. The total number of Fourier terms for each seasonal period have been chosen to minimize the AICc. We will use a log transformation (`lambda=0`) to ensure the forecasts and prediction intervals remain positive.
 
-```{r callsharmonics, echo=TRUE, cache=TRUE}
-#fit <- auto.arima(calls, seasonal=FALSE, lambda=0,
-#         xreg=fourier(calls, K=c(10,10)))
-#fc <- forecast(fit, xreg=fourier(calls, K=c(10,10), h=2*169))
-#autoplot(fc, include=5*169) +
-#  ylab("Call volume") + xlab("Weeks")
+```{r callsharmonics, echo=TRUE}
+fit <- auto.arima(calls, seasonal=FALSE, lambda=0,
+         xreg=fourier(calls, K=c(10,10)))
+fc <- forecast(fit, xreg=fourier(calls, K=c(10,10), h=2*169))
+autoplot(fc, include=5*169) +
+  ylab("Call volume") + xlab("Weeks")
 ```
 
-This is a very large model (containing 120+??=?? parameters).
+This is a very large model, containing `r length(coef(fit))` parameters.
 
 ### TBATS models {-}
 
@@ -57,12 +67,14 @@ A TBATS model differs from dynamic harmonic regression in that the seasonality i
 
 ```{r callstbats, echo=TRUE, cache=TRUE}
 calls %>%
-  subset(start=length(calls)-1000) %>%
+  subset(start=length(calls)-2000) %>%
   tbats -> fit2
 fc2 <- forecast(fit2, h=2*169)
 autoplot(fc2, include=5*169) +
   ylab("Call volume") + xlab("Weeks")
 ```
+
+Here the prediction intervals appear to be much too wide -- something that seems to happen quite often with TBATS models unfortunately.
 
 ### Complex seasonality with covariates {-}
 
@@ -98,31 +110,27 @@ fit <- auto.arima(elecdemand[,"Demand"],
                cooling=cooling))
 ```
 
-Forecasting with such models is difficult because we require future values of the predictor variables. Future values of the Fourier terms are easy to compute, but future temperatures are, of course, unknown. We could use temperature forecasts obtain from a meteorological model if we are only interested in forecasting up to a week ahead. Alternatively, we could use scenario forecasting and plug in possible temperature patterns. In the following example, we have used a repeat of the last week of temperatures to generate future possible demand values.
+Forecasting with such models is difficult because we require future values of the predictor variables. Future values of the Fourier terms are easy to compute, but future temperatures are, of course, unknown. We could use temperature forecasts obtain from a meteorological model if we are only interested in forecasting up to a week ahead. Alternatively, we could use scenario forecasting and plug in possible temperature patterns. In the following example, we have used a repeat of the last two days of temperatures to generate future possible demand values.
 
 ```{r elecdemand4, cache=TRUE, echo=TRUE}
-#temps <- subset(elecdemand[,"Temperature"], start=NROW(elecdemand)-7*48-1)
-#fc <- forecast(fit, xreg=cbind(fourier(temps, c(10,10,0)),
-#                           heating=temps, cooling=pmax(temps,18)))
-#autoplot(fc)
+temps <- subset(elecdemand[,"Temperature"], start=NROW(elecdemand)-2*48-1)
+fc <- forecast(fit, xreg=cbind(fourier(temps, c(10,10,0)),
+                           heating=temps, cooling=pmax(temps,18)))
+autoplot(fc, include=14*48)
 ```
+
+Although the short-term forecasts look reasonable, this is a very crude model for a complicated process. The residuals demonstrate that there is a lot of information that has not been captured with this model.
+
 
 ```{r elecdemand5, cache=TRUE, echo=TRUE}
-#checkresiduals(fc)
+checkresiduals(fc)
 ```
 
-## Forecasting counts
-
-croston
-
-Poisson models?
-
-Other intermittent demand models
-
+More sophisticated versions of this model which provide much better forecasts are described in @HF2010 and @FH2012.
 
 ## Vector autoregressions {#VAR}
 
-One limitation with the models we have considered so far is that they impose a unidirectional relationship --- the forecast variable is influenced by the predictor variables, but not vice versa. However, there are many cases where the reverse should also be allowed for --- where all variables affect each other. In Chapter 9, the changes in personal consumption expenditure ($C_t$) were forecast based on the changes in personal disposable income ($I_t$). However, in this case a bi-directional relationship may be more suitable: an increase in $I_t$ will lead to an increase in $C_t$ and vice versa.
+One limitation with the models we have considered so far is that they impose a unidirectional relationship --- the forecast variable is influenced by the predictor variables, but not vice versa. However, there are many cases where the reverse should also be allowed for --- where all variables affect each other. In Section \@ref(regarima), the changes in personal consumption expenditure ($C_t$) were forecast based on the changes in personal disposable income ($I_t$). However, in this case a bi-directional relationship may be more suitable: an increase in $I_t$ will lead to an increase in $C_t$ and vice versa.
 
 An example of such a situation occurred in Australia during the Global Financial Crisis of 2008--2009. The Australian government issued stimulus packages that included cash payments in December 2008, just in time for Christmas spending. As a result, retailers reported strong sales and the economy was stimulated. Consequently, incomes increased.
 
@@ -260,7 +268,7 @@ The `avNNet` function from the **caret** package fits a feed-forward neural netw
 
 ### Neural network autoregression {-}
 
-With time series data, lagged values of the time series can be used as inputs to a neural network. Just as we used lagged values in a linear autoregression model (Chapter 8), we can use lagged values in a neural network autoregression.
+With time series data, lagged values of the time series can be used as inputs to a neural network. Just as we used lagged values in a linear autoregression model (Chapter \@ref(arima)), we can use lagged values in a neural network autoregression.
 
 In this book, we only consider feed-forward networks with one hidden layer, and use the notation NNAR($p,k$) to indicate there are $p$ lagged inputs and $k$ nodes in the hidden layer. For example, a NNAR(9,5) model is a neural network with the last nine observations $(y_{t-1},y_{t-2},\dots,y_{t-9}$) used as inputs to forecast the output $y_t$, and with five neurons in the hidden layer. A NNAR($p,0$) model is equivalent to an ARIMA($p,0,0$) model but without the restrictions on the parameters to ensure stationarity.
 
