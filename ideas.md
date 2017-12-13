@@ -1,6 +1,6 @@
 # fpp2 ideas to add?
 
- * examples involving electricity demand, online shopping, and restaurant bookings.
+ * examples involving online shopping, and restaurant bookings.
 
 ## STLF chapter
  * different types of residuals for STLF.

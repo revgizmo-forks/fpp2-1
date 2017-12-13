@@ -372,6 +372,3 @@ autoplot(training, series="Training data") +
 ```
 
 ## Dealing with missing values and outliers {#missing-outliers}
-
-## Bootstrapping and bagging {#bootstrap}
-

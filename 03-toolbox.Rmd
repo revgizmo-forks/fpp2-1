@@ -706,7 +706,7 @@ When plotted, the prediction intervals are shown as shaded region, with the stre
 autoplot(naive(dj2))
 ```
 
-### Bootstrapped prediction intervals {-}
+### Prediction intervals from bootstrapped residuals {-}
 
 When a normal distribution for the forecast errors is an unreasonable assumption, one alternative is to use bootstrapping, which only assumes that the forecast errors are uncorrelated.
 

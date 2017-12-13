@@ -851,55 +851,6 @@ Model            Forecast variance: $\sigma_h$
 For a few ETS models, there are no known formulas for prediction intervals. In these cases, the `forecast.ets` function uses simulated future sample paths and computes prediction intervals from the percentiles of these simulated future paths.
 
 
-### Bagged ETS forecasts {-}
-
-A useful way to improve forecast accuracy is to generate multiple versions of the time series with slight variations. Then forecast from each of these additional time series, and average the resulting forecasts. This is called "bagging" which stands for "**b**ootstrap **agg**regatin**g**". The additional time series are bootstrapped versions of the original series, and we aggregate the results to get a better forecast.
-
-We can combine STL decomposition and ETS model to get bagged ETS forecasts. First, the time series is Box-Cox-transformed, and then decomposed into trend, seasonal and remainder components using STL. Then we obtain shuffled versions of the remainder component to get bootstrapped remainder series. Because there may be autocorrelation present in an STL remainder series, we cannot simply use the re-draw procedure that was described in Section \@ref(prediction-intervals). Instead, we use a "blocked bootstrap", where contiguous sections of the time series are selected at random and joined together. These bootstrapped remainder series are added to the trend and seasonal components, and the Box-Cox transformation is reversed to give variations on the original time series. Some examples are shown below for the Australian international tourist data.
-
-```{r baggedts, echo=FALSE, message=FALSE, warning=FALSE, dependson="austouristets",  fig.cap="Ten bootstrapped versions of quarterly Australian tourist arrivals."}
-set.seed(7)
-bootseries <- bld.mbb.bootstrap(aust, 10) %>%
-  as.data.frame %>% ts(start=2005, frequency=4)
-autoplot(aust) +
-  forecast::autolayer(bootseries, colour=TRUE) +
-  forecast::autolayer(aust, colour=FALSE) +
-  ylab("Bootstrapped series") +
-  guides(colour="none")
-```
-
-The coloured lines show ten bootstrapped series, while the black line is the original data. We use `ets` to forecast each of these series; it may choose a different model in each case, although most likely it will use the same model because the series are very similar. However, the parameters of the models will be different because the data are different.  Consequently the forecast will vary also.  Figure \@ref(fig:baggedf) shows the ten forecasts obtained in this way.
-
-```{r baggedf, echo=FALSE, dependson="baggedts", fig.cap="Forecasts of the ten bootstrapped series obtained using ETS models.", message=FALSE, warning=FALSE}
-fc <- purrr::map(as.list(bootseries), 
-           function(x){forecast(x)$mean}) %>%
-  as.data.frame %>% 
-  ts(frequency=4, start=2016)
-autoplot(aust) +
-  forecast::autolayer(bootseries, colour=TRUE) +
-  forecast::autolayer(fc, colour=TRUE) +
-  forecast::autolayer(aust, colour=FALSE) +
-  ylab("Bootstrapped series") +
-  guides(colour="none")
-```
-
-The average of these forecast gives the bagged forecasts of the original data. The whole procedure can be handled with the `baggedETS` function:
-
-```{r baggedets, dependson="austouristets", fig.cap="Comparing bagged ETS forecasts (the average of 100 bootstrapped forecast) and ETS applied directly to the data."}
-etsfc <- aust %>% 
-  ets %>% forecast(h=12)
-baggedfc <- aust %>%
-  baggedETS %>% forecast(h=12)
-autoplot(aust) +
-  forecast::autolayer(baggedfc$mean, series="BaggedETS") +
-  forecast::autolayer(etsfc$mean, series="ETS") +
-  guides(colour=guide_legend(title="Forecasts"))
-```
-
-By default, 100 bootstrapped series are used, and the length of the blocks used for obtaining bootstrapped residuals is set to 8 for quarterly data. 
-
-In this case, it makes very little difference. @baggedETS show that, on average, it gives better forecasts than just applying `ets` directly. Of course, it is slower because a lot more computation is required.
-
 
 ## Exercises {#expsmooth-exercises}
 

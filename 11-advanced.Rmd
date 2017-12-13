@@ -301,6 +301,122 @@ autoplot(fcast)
 Because it is a little slow, `PI=FALSE` is the default, so prediction intervals are not computed unless requested. The `npaths` argument in `forecast.nnetar` controls how many simulations are done (default 1000). By default, the errors are drawn from a normal distribution. The `bootstrap` argument allows the errors to be "bootstrapped" (i.e., randomly drawn from the historical errors). 
 
 
+## Bootstrapping and bagging {#bootstrap}
+
+### Bootstrapping time series {-}
+
+In Section \@ref(prediction-intervals), we described how to bootstrap the residuals of a time series in order to simulate future values of a series using a model.
+
+More generally, we can generate new time series that are similar to our observed series, using another type of bootstrap.
+
+First, the time series is Box-Cox-transformed, and then decomposed into trend, seasonal and remainder components using STL. Then we obtain shuffled versions of the remainder component to get bootstrapped remainder series. Because there may be autocorrelation present in an STL remainder series, we cannot simply use the re-draw procedure that was described in Section \@ref(prediction-intervals). Instead, we use a "blocked bootstrap", where contiguous sections of the time series are selected at random and joined together. These bootstrapped remainder series are added to the trend and seasonal components, and the Box-Cox transformation is reversed to give variations on the original time series. 
+
+Some examples are shown below for the monthly expenditure on retail debit cards in Iceland, from January 2000 to August 2013.
+
+```{r stlbookts, message=FALSE, warning=FALSE, fig.cap="Ten bootstrapped versions of quarterly Australian tourist arrivals."}
+bootseries <- bld.mbb.bootstrap(debitcards, 10) %>%
+  as.data.frame %>% ts(start=2000, frequency=12)
+autoplot(debitcards) +
+  forecast::autolayer(bootseries, colour=TRUE) +
+  forecast::autolayer(debitcards, colour=FALSE) +
+  ylab("Bootstrapped series") + guides(colour="none")
+```
+
+This type of bootstrapping can be useful in two ways. First it helps us to get a better measure of forecast uncertainty, and second it provides a way of improving our point forecasts using "bagging".
+
+### Prediction intervals from bootstrapped series {-}
+
+Almost all prediction intervals from time series models are too narrow. This is a well-known phenomenon and arises because they do not account for all sources of uncertainty. In @HKSG02, we measured the size of the problem by computing the actual coverage percentage of the prediction intervals on test data. We found that for ETS models, nominal 95% intervals may only provide coverage between 71% and 87%. The difference is due to missing sources of uncertainty.
+
+There are at least four sources of uncertainty in forecasting using time series models:
+
+  1. The random error term;
+  2. The parameter estimates;
+  3. The choice of model for the historical data;
+  4. The continuation of the historical data generating process into the future.
+
+When we produce prediction intervals for time series models, we generally only take into account the first of these sources of uncertainty. Even if we ignore the model uncertainty and the uncertainty due to changing  data generating processes (sources 3 and 4), and we just try to allow for parameter uncertainty as well as the random error term (sources 1 and 2), there are no algebraic solutions apart from some simple special cases.
+
+We can use bootstrapped time series to go some way towards overcoming this problem. We demonstrate the idea using the `debitcards` data. First, we simulate many time series that are similar to the original data, using the block-bootstrap described above.
+
+```{r debitcardsim}
+nsim <- 1000L
+sim <- bld.mbb.bootstrap(debitcards, nsim)
+```
+
+For each of these series, we fit an ETS model and simulate one sample path from that model. A different ETS model may be selected in each case, although it will most likely select the same model because the series are very similar. However, the estimated parameters will be different. Therefore the simulated sample paths will allow for model uncertainty and parameter uncertainty, as well as the uncertainty associated with the random error term. Naturally, this takes a while as there are a large number of time series to model.
+
+```{r debitcardboot, dependson="debitcardsim"}
+h <- 36L
+future <- matrix(0, nrow=nsim, ncol=h)
+for(i in seq(nsim))
+  future[i,] <- simulate(ets(sim[[i]]), nsim=h)
+```
+
+Finally, we take the means and quantiles of these simulated sample paths to form point forecasts and prediction intervals.
+
+```{r debitcardfc, dependson='debitcardboot'}
+start <- tsp(debitcards)[2]+1/12
+simfc <- structure(list(
+    mean = ts(colMeans(future), start=start, frequency=12),
+    lower = ts(apply(future, 2, quantile, prob=0.025), 
+               start=start, frequency=12),
+    upper = ts(apply(future, 2, quantile, prob=0.975),
+               start=start, frequency=12),
+    level=95),
+  class="forecast")
+```
+
+These prediction intervals will be larger than those obtained from an ETS model applied directly to the original data.
+
+```{r debitcardscomparison, dependson='debitcardboot'}
+etsfc <- forecast(ets(debitcards), h=h, level=95)
+autoplot(debitcards) +
+  ggtitle("Monthly retail debit card usage in Iceland") +
+  xlab("Year") + ylab("million ISK") +
+  forecast::autolayer(simfc, series="Simulated") +
+  forecast::autolayer(etsfc, series="ETS")
+```
+
+### Bagged ETS forecasts {-}
+
+Another use for these bootstrapped time series is to improve forecast accuracy. If we produce forecasts from each of the additional time series, and average the resulting forecasts, we get better forecasts than if we simply forecast the original time series directly. This is called "bagging" which stands for "**b**ootstrap **agg**regatin**g**". 
+
+We could simply average the simulated future sample paths computed earlier. However, if our interest is only in improving point forecast accuracy, and not in also obtaining improved prediction intervals, then it is quicker to average the point forecasts from each series. The speed improvement comes about because we do not need to produce so many simulated series.
+
+We will use `ets` to forecast each of these series. Figure \@ref(fig:baggedf) shows ten forecasts obtained in this way.
+
+```{r baggedf, dependson="debitcardboot", fig.cap="Forecasts of the ten bootstrapped series obtained using ETS models.", message=FALSE, warning=FALSE}
+sim <- bld.mbb.bootstrap(debitcards, 10) %>%
+  as.data.frame() %>%
+  ts(frequency=12, start=2000)
+fc <- purrr::map(as.list(sim), 
+           function(x){forecast(ets(x))$mean}) %>%
+      as.data.frame() %>%
+      ts(frequency=12, start=start)
+autoplot(debitcards) +
+  forecast::autolayer(sim, colour=TRUE) +
+  forecast::autolayer(fc, colour=TRUE) +
+  forecast::autolayer(debitcards, colour=FALSE) +
+  ylab("Bootstrapped series") +
+  guides(colour="none")
+```
+
+The average of these forecast gives the bagged forecasts of the original data. The whole procedure can be handled with the `baggedETS` function:
+
+```{r baggedets, fig.cap="Comparing bagged ETS forecasts (the average of 100 bootstrapped forecast) and ETS applied directly to the data."}
+etsfc <- debitcards %>% ets %>% forecast(h=36)
+baggedfc <- debitcards %>% baggedETS %>% forecast(h=36)
+autoplot(debitcards) +
+  forecast::autolayer(baggedfc$mean, series="BaggedETS") +
+  forecast::autolayer(etsfc$mean, series="ETS") +
+  guides(colour=guide_legend(title="Forecasts"))
+```
+
+By default, 100 bootstrapped series are used, and the length of the blocks used for obtaining bootstrapped residuals is set to 24 for monthly data. 
+
+In this case, it makes very little difference. @baggedETS show that, on average, it gives better forecasts than just applying `ets` directly. Of course, it is slower because a lot more computation is required.
+
 
 
 ## Exercises {#advanced-exercises}
