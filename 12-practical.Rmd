@@ -388,4 +388,18 @@ Missing data can arise for many reasons, and it is worth considering whether the
 
 In other situations, the missingness may be essentially random. For example, someone may have forgotten to record the sales figures, or the data recording device may have malfunctioned. If the timing of the missing data is not informative for the forecasting problem, then the missing values can be handled more easily.
 
-Some methods allow for missing values without any problem. For example, the naive forecasting method continues to work, with the most recent non-missing value providing the forecast for the future time periods. 
+Some methods allow for missing values without any problem. For example, the naive forecasting method continues to work, with the most recent non-missing value providing the forecast for the future time periods. Similarly, the other benchmark methods introduced in Section \@ref(simple-methods) will all produce forecasts when there are missing values present in the historical data. The R functions for ARIMA models, dynamic regression models and NNAR models will also work correctly without causing errors. However, other modelling functions do not handle missing values including `ets`, `stlf`, and `tbats`. 
+
+When missing values cause errors, there are at least two ways to handle the problem. First, we could just take the section of data after the last missing value, assuming there is a long enough series of observations to produce meaningful forecasts. Alternatively, we could replace the missing values with estimates. The `na.interp` function is designed for this purpose.
+
+The `gold` data contains daily morning gold prices from 1 January 1985 to 31 March 1989. This series was provided to us as part of a consulting project; it contains 34 missing values as well as one apparently incorrect value. We can estimate the missing observations like this.
+
+```{r goldna}
+gold2 <- na.interp(gold)
+autoplot(gold2, series="Interpolated") +
+  forecast::autolayer(gold, series="Original") +
+  scale_color_manual(values=c(`Interpolated`="red",`Original`="grey"))
+```
+
+### Outliers {-}
+
