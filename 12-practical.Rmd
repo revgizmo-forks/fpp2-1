@@ -372,3 +372,13 @@ autoplot(training, series="Training data") +
 ```
 
 ## Dealing with missing values and outliers {#missing-outliers}
+
+Real data often contains missing values, outlying observations, and other messy features. Dealing with them can sometimes be troublesome.
+
+### Missing values {-}
+
+Missing data can arise for many reasons, and it is worth considering whether the missingness will induce bias in the forecasting model. For example, suppose we are studying sales data for a store, and missing values occur on public holidays when the store is closed. The following day may have increased sales as a result. If we fail to allow for this in our forecasting model, we will most likely under-estimate sales on the first day after the public holiday, but over-estimate sales on the days after that. One way to deal with this kind of situation is to use a dynamic regression model, with dummy variables indicating if the day is a public holiday or the day after a public holiday. No automated method can handle such effects as they depend on the specific forecasting context.
+
+In other situations, the missingness may be essentially random. For example, someone may have forgotten to record the sales figures, or the data recording device may have malfunctioned. If the timing of the missing data is not informative for the forecasting problem, then the missing values can be handled more easily.
+
+Some methods allow for missing values without any problem. For example, the naive forecasting method continues to work, with the most recent non-missing value providing the forecast for the future time periods. 
