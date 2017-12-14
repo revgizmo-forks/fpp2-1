@@ -280,7 +280,7 @@ autoplot(bc) + ggtitle(paste("Backcasts from",bc$method))
 
 ## Very long and very short time series {#long-short-ts}
 
-### Forecasting very short time series  {#short-ts}
+### Forecasting very short time series  {-}
 
 We often get asked how *few* data points can be used to fit a time series model. As with almost all sample size questions, there is no easy answer. It depends on the *number of model parameters to be estimated and the amount of randomness in the data*. The sample size required increases with the number of parameters to be estimated, and the amount of noise in the data.
 
@@ -322,7 +322,7 @@ M1[n < 20] %>%
   table()
 ```
 
-### Forecasting very long time series {#long-ts}
+### Forecasting very long time series {-}
 
 Most time series models do not work well for very long time series. The problem is that real data do not come from the models we use. When the number of observations is not large (say up to about 200) the models often work well as an approximation to whatever process generated the data. But eventually you will have enough data that the difference between the true process and the model starts to become more obvious. An additional problem is that the optimization of the parameters becomes more time consuming because of the number of observations involved. 
 
@@ -337,7 +337,7 @@ For example, we fitted a dynamic harmonic regression model to 26 years of weekly
 Typically, we compute one-step forecasts on the training data (the "fitted values") and multi-step forecasts on the test data. However, occasionally we may wish to compute multi-step forecasts on the training data, or one-step forecasts on the test data. 
 
 
-### Multi-step forecasts on training data {#isms}
+### Multi-step forecasts on training data {-}
 
 We normally define fitted values to be one-step forecasts on the training set (see Section \@ref(residuals)), but a similar idea can be used for multi-step forecasts. The `fitted()` function has an `h` argument to allow for $h$-step "fitted values" on the training set. 
 
@@ -348,7 +348,7 @@ autoplot(training, series="Training data") +
   forecast::autolayer(fitted(cafe.train, h=12), series="12-step fitted values")
 ```
 
-### One-step forecasts on test data {#oosos}
+### One-step forecasts on test data {-}
 
 It is common practice to fit a model using training data, and then to evaluate its performance on a test data set. The way this is usually done means the comparisions on the test data use different forecast horizons. For example, suppose we use the last twenty observations for the test data, and estimate our forecasting model on the training data. Then the forecast errors will be for 1-step, 2-steps, ..., 20-steps ahead. The forecast variance usually increases with the forecast horizon, so if we simply averaging the absolute or squared errors from the test set, we are combining results with different variances.
 
