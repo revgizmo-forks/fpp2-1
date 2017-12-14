@@ -9,9 +9,5 @@
  * exponential smoothing with covariates?
 
 ## Some practical forecasting issues (new chapter)
- * prediction intervals too narrow (blog post)
  * FAQ on the AIC (blog post)
- * Missing values
- * Handling outliers and tsclean
  * How to improve your forecasts
- * Bootstrapped forecasts -- non-normal residuals

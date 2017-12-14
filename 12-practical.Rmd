@@ -394,12 +394,50 @@ When missing values cause errors, there are at least two ways to handle the prob
 
 The `gold` data contains daily morning gold prices from 1 January 1985 to 31 March 1989. This series was provided to us as part of a consulting project; it contains 34 missing values as well as one apparently incorrect value. We can estimate the missing observations like this.
 
-```{r goldna}
+```{r goldna, fig.cap="Daily morning gold prices for 1108 consecutive trading days beginning on 1 January 1985 and ending on 31 March 1989."}
 gold2 <- na.interp(gold)
 autoplot(gold2, series="Interpolated") +
   forecast::autolayer(gold, series="Original") +
-  scale_color_manual(values=c(`Interpolated`="red",`Original`="grey"))
+  scale_color_manual(values=c(`Interpolated`="red",`Original`="gray"))
 ```
+
+For non-seasonal data like this, simple linear interpolation is used to fill in the missing sections. For seasonal data, an STL decomposition is used estimate the seasonally component, and the seasonally adjusted series are linear interpolated. More sophisticated missing value interpolation is provided in the `imputeTS` package.
+
 
 ### Outliers {-}
 
+Outliers are observations that are very different from the majority of the observations in the time series. They may be errors, or they may simply be very unusual. All of the methods we have considered in this book will not work well if there are extreme outliers in the data. In this case, we may wish to replace them with missing values, or with an estimate that is more consistent with the majority of the data.
+
+Simply replacing outliers without thinking about why they have occurred is a dangerous practice. They may provide useful information about the process that produced the data, and which should be taken into account when forecasting.
+
+However, if we are willing to assume that the outliers are genuinely errors, or that they won't occur in the forecasting period, then replacing them can make the forecasting task easier.
+
+The `tsoutliers()` function is designed to identify outliers, and to suggest potential replacement values. In the `gold` data shown in Figure \@ref(fig:goldna) there is an apparently outlier on day 770:
+
+```{r goldoutlier}
+tsoutliers(gold)
+```
+
+Closer inspection reveals that the neighbouring observations are very close to \$100 less than the apparent outlier.
+
+```{r goldoutlier2, include=FALSE}
+options(digits=5)
+```
+
+```{r goldoutlier3, dependson="goldoutlier2"}
+gold[768:772]
+```
+
+Most likely, this was a transcription error, and the correct value should have been \$493.70.
+
+Another useful function is `tsclean()` which identifies and replaces outliers, and also replaces missing values. Obviously this should be used with some caution, but it does allow us to use forecasting models that are sensitive to outliers, or which do not handle missing values. For example, we could use the `ets()` function on the `gold` series, after applying `tsclean()`.
+
+```{r goldets}
+gold %>% 
+  tsclean() %>%
+  ets() %>%
+  forecast(h=50) %>%
+  autoplot()
+```
+
+Notice that the outlier and missing values have been replaced with estimates.
