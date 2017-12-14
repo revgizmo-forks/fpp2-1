@@ -278,7 +278,9 @@ euretail %>%
 autoplot(bc) + ggtitle(paste("Backcasts from",bc$method))
 ```
 
-## Forecasting very short time series  {#short-ts}
+## Very long and very short time series {#long-short-ts}
+
+### Forecasting very short time series  {#short-ts}
 
 We often get asked how *few* data points can be used to fit a time series model. As with almost all sample size questions, there is no easy answer. It depends on the *number of model parameters to be estimated and the amount of randomness in the data*. The sample size required increases with the number of parameters to be estimated, and the amount of noise in the data.
 
@@ -320,7 +322,7 @@ M1[n < 20] %>%
   table()
 ```
 
-## Forecasting very long time series {#long-ts}
+### Forecasting very long time series {#long-ts}
 
 Most time series models do not work well for very long time series. The problem is that real data do not come from the models we use. When the number of observations is not large (say up to about 200) the models often work well as an approximation to whatever process generated the data. But eventually you will have enough data that the difference between the true process and the model starts to become more obvious. An additional problem is that the optimization of the parameters becomes more time consuming because of the number of observations involved. 
 
