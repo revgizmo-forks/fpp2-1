@@ -1,0 +1,6 @@
+# About the authors {-}
+
+![](Hyndman.png) [**Rob J Hyndman**](https://robjhyndman.com) is Professor of Statistics at Monash University, Australia, and Editor-in-Chief of the *International Journal of Forecasting*. He is author of over 140 research papers in statistical science. In 2007, he received the Moran medal from the Australian Academy of Science for his contributions to statistical research. For over 30 years, Rob has maintained an active consulting practice, assisting hundreds of companies and organizations on forecasting problems.
+
+![](Athanasopoulos.png) [**George Athana­sopou­los**](https://research.monash.edu/en/persons/george-athanasopoulos) is an Associate Professor in the Department of Econometrics and Business Statistics at Monash University, Australia. He received a PhD in Econometrics from Monash University in 2007, and has received many awards and distinctions for his research. His research interests include multivariate time series analysis, forecasting, non-linear time series, wealth and tourism economics. He is on the Editorial Boards of the *Journal of Travel Research* and the *International Journal of Forecasting*.
+
