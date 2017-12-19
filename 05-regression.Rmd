@@ -608,7 +608,7 @@ Section \@ref(accuracy) introduced time series cross-validation as a general and
 2. Repeat step 1 for $t=1,\dots,T$.
 3. Compute the MSE from $e_{1}^*,\dots,e_{T}^*$. We shall call this the CV.
 
-Although this looks like a time-consuming procedurem there are very fast methods of calculating CV, so that it takes no longer than fitting one model to the full data set. The equation for computing CV efficiently is given in Section \@ref(regression-matrices).
+Although this looks like a time-consuming procedure, there are very fast methods of calculating CV, so that it takes no longer than fitting one model to the full data set. The equation for computing CV efficiently is given in Section \@ref(regression-matrices).
 
 Under this criterion, the best model is the one with the smallest value of CV.
 
