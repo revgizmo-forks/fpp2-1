@@ -584,11 +584,18 @@ Computer output for regression will always give the $R^2$ value, discussed in Se
 
 In addition, $R^2$ does not allow for "degrees of freedom". Adding *any* variable tends to increase the value of $R^2$, even if that variable is irrelevant. For these reasons, forecasters should not use $R^2$ to determine whether a model will give good predictions.
 
-An equivalent idea is to select the model which gives the minimum sum of squared errors (SSE), given by $$\text{SSE} = \sum_{t=1}^T e_{t}^2.$$
+An equivalent idea is to select the model which gives the minimum sum of squared errors (SSE), given by 
+$$
+  \text{SSE} = \sum_{t=1}^T e_{t}^2.
+$$
 
 Minimizing the SSE is equivalent to maximizing $R^2$ and will always choose the model with the most variables, and so is not a valid way of selecting predictors.
 
-An alternative, designed to overcome these problems, is the adjusted $R^2$ (also called "R-bar-squared"): $$\bar{R}^2 = 1-(1-R^2)\frac{T-1}{T-k-1},$$ where $T$ is the number of observations and $k$ is the number of predictors. This is an improvement on $R^2$ as it will no longer increase with each added predictor. Using this measure, the best model will be the one with the largest value of $\bar{R}^2$. Maximizing $\bar{R}^2$ is equivalent to minimizing the standard error $\hat{\sigma}_e$ given in Equation \@ref(#eq:Regr-se).
+An alternative, designed to overcome these problems, is the adjusted $R^2$ (also called "R-bar-squared"): 
+$$
+  \bar{R}^2 = 1-(1-R^2)\frac{T-1}{T-k-1},
+$$ 
+where $T$ is the number of observations and $k$ is the number of predictors. This is an improvement on $R^2$ as it will no longer increase with each added predictor. Using this measure, the best model will be the one with the largest value of $\bar{R}^2$. Maximizing $\bar{R}^2$ is equivalent to minimizing the standard error $\hat{\sigma}_e$ given in Equation \@ref(eq:Regr-se).
 
 Maximizing $\bar{R}^2$ works quite well as a method of selecting predictors,
 although it does tend to err on the side of selecting too many predictors.
@@ -601,7 +608,7 @@ Section \@ref(accuracy) introduced time series cross-validation as a general and
 2. Repeat step 1 for $t=1,\dots,T$.
 3. Compute the MSE from $e_{1}^*,\dots,e_{T}^*$. We shall call this the CV.
 
-Although this looks this looks like a  time-consuming procedure there are very fast methods of calculating CV, so that it takes no longer than fitting one model to the full data set. The equation for computing CV efficiently is given in Section \@ref(regression-matrices).
+Although this looks like a time-consuming procedurem there are very fast methods of calculating CV, so that it takes no longer than fitting one model to the full data set. The equation for computing CV efficiently is given in Section \@ref(regression-matrices).
 
 Under this criterion, the best model is the one with the smallest value of CV.
 
