@@ -980,7 +980,7 @@ farima <- function(x, h) {
   forecast(auto.arima(x), h=h)
 }
 ```
-The returned objects can then be passed into `tsCV`. Let's consider ARIMA models and ETS models for the `air` data as introduced in Section \@ref(trend) where, `air <- window(ausair, start=1990)`.
+The returned objects can then be passed into `tsCV`. Let's consider ARIMA models and ETS models for the `air` data as introduced in Section \@ref(holt) where, `air <- window(ausair, start=1990)`.
 ```{r include=FALSE}
 air <- window(ausair, start=1990)
 ```
