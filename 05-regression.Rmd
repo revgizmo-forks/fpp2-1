@@ -560,6 +560,7 @@ Cases of spurious regression might appear to give reasonable short-term forecast
 
 
 ```{r tslmspurious, fig.cap="Residuals from a spurious regression.", echo=TRUE, dependson="spurious"}
+aussies <- window(ausair, end=2011)
 fit <- tslm(aussies ~ guinearice)
 summary(fit)
 checkresiduals(fit)
@@ -755,14 +756,19 @@ In this setting, the forecaster assumes possible scenarios for the predictor var
 
 
 ```{r ConsInc4, echo=TRUE, fig.cap="Forecasting percentage changes in personal consumption expenditure for the US under scenario based forecasting."}
-fit.consBest <- tslm(Consumption ~ Income + Savings + Unemployment, data = uschange)
+fit.consBest <- tslm(Consumption ~ Income + Savings + Unemployment, 
+  data = uschange)
 h <- 4
 newdata <-
-  cbind(Income=c(1,1,1,1), Savings=c(0.5,0.5,0.5,0.5), Unemployment=c(0,0,0,0)) %>%
+  cbind(Income=c(1,1,1,1), 
+        Savings=c(0.5,0.5,0.5,0.5), 
+        Unemployment=c(0,0,0,0)) %>%
   as.data.frame()
 fcast.up <- forecast(fit.consBest, newdata=newdata)
 newdata <-
-  cbind(Income=rep(-1,h), Savings=rep(-0.5,h), Unemployment=rep(0,h)) %>%
+  cbind(Income=rep(-1,h), 
+        Savings=rep(-0.5,h), 
+        Unemployment=rep(0,h)) %>%
   as.data.frame()
 fcast.down <- forecast(fit.consBest, newdata=newdata)
 
@@ -813,7 +819,7 @@ fcast.up$mean[1]
 Assuming that for the next four quarters personal income will increase by its historical mean value of $\bar{x}=`r round(mean(uschange[,"Income"]),2)`\%$, consumption is forecast to increase by $`r round(fcast.up$mean[1],2)`\%$ and
 the corresponding $95\%$ and $80\%$ prediction intervals are $[`r round(fcast.up$lower[1,2],2)`,`r round(fcast.up$upper[1,2],2)`]$ and $[`r round(fcast.up$lower[1,1],2)`,`r round(fcast.up$upper[1,1],2)`]$ respectively (calculated using R). If we assume an extreme increase of $10\%$ in income then the prediction intervals are considerably wider as shown in Figure \@ref(fig:conSimplePI).
 
-```{r conSimplePI, echo=FALSE, fig.cap="Prediction intervals if income is increased by its historical mean versus an extreme increase of 10%.", echo=TRUE}
+```{r conSimplePI, echo=FALSE, fig.cap="Prediction intervals if income is increased by its historical mean versus an extreme increase of 10%.", echo=TRUE, depeondson="fitconsupdown"}
 autoplot(uschange[,"Consumption"]) +
   ylab("% change in US consumption") +
   forecast::autolayer(fcast.up, PI=TRUE, series="Average increase") +
