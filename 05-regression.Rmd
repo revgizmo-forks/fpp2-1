@@ -931,7 +931,7 @@ In Section \@ref(useful-predictors) fitting a linear trend to a time series by s
 \]
 However, it is not recommended that quadratic or higher order trends are used in forecasting. When they are extrapolated, the resulting forecasts are often very unrealistic.
 
-A better approach is to use the piecewise specification introduced above and fit a piecwise linear trend which bends at some point in time. We can think of this as a nonlinear trend constructed of linear pieces. If the trend bends at time $\tau$, then it can be specified by simply replacing $x=t$ and $c=\tau$ above such that we include the predictors,
+A better approach is to use the piecewise specification introduced above and fit a piecewise linear trend which bends at some point in time. We can think of this as a nonlinear trend constructed of linear pieces. If the trend bends at time $\tau$, then it can be specified by simply replacing $x=t$ and $c=\tau$ above such that we include the predictors,
 \begin{align*}
   x_{1,t} & = t \\
   x_{2,t} = (t-\tau)_+ &= \left\{
@@ -944,7 +944,7 @@ in the model. If the associated coefficients of $x_{1,t}$ and $x_{2,t}$ are $\be
 
 #### Example: Boston marathon winning times {-}
 
-The left panel of Figure \@ref(fig:marathonLinear) shows the Boston marathon winning times (in minutes) since it started in 1897. The time series shows a general downward trend as the winning times have been improving over the years. The right panel shows the residuals from fitting a linear trend to the data. The plot shows an obvious nonlinear pattern which has not been captured by the linear trend.
+The top panel of Figure \@ref(fig:marathonLinear) shows the Boston marathon winning times (in minutes) since it started in 1897. The time series shows a general downward trend as the winning times have been improving over the years. The bottom panel shows the residuals from fitting a linear trend to the data. The plot shows an obvious nonlinear pattern which has not been captured by the linear trend.
 
 ```{r marathonLinear, echo=FALSE, fig.cap="Fitting a linear trend to the Boston marathon winning times is inadequate", message=TRUE, warning=FALSE}
 fit.lin <- tslm(marathon ~ trend)
