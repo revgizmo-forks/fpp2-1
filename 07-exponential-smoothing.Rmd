@@ -304,24 +304,25 @@ mean(abs(e2), na.rm=TRUE)
 mean(abs(e3), na.rm=TRUE)
 ```
 
-Based on MSE, Holt's method is best. But based on MAE, simple exponential smoothing is best. Conflicts such as this are common in forecasting comparisons. As forecasting tasks can vary by many dimensions (length of forecast horizon, size of test set, forecast error measures, frequency of data, etc.), it is unlikely that one method will be better than all others for all forecasting scenarios. What we require from a forecasting method are consistently sensible forecasts, and these should be frequently evaluated against the task at hand. In this case, the data are clearly trended, so we will prefer Holt's method, and apply it to the whole data set to get forecasts for future years.
+Damped Holt's method is best whether you compare MAE or MSE values. So we will proceed with using the damped Holt's method and apply it to the whole data set to get forecasts for future years.
 
 
 ```{r holtmodel, echo=TRUE}
-fc <- holt(livestock)
+fc <- holt(livestock, damped=TRUE)
 # Estimated parameters:
 fc[["model"]]
 ```
 
 The smoothing parameter for the slope parameter is estimated to be essentially zero, indicating that the trend is not changing over time.  The value of $\alpha$ is very close to one, showing that the level reacts strongly to each new observation.
 
-```{r fig-7-comp, fig.cap="Forecasting livestock, sheep in Asia: comparing forecasting performance of non-seasonal method.", echo=TRUE}
+```{r fig-7-comp, fig.cap="Forecasting livestock, sheep in Asia: comparing forecasting performance of non-seasonal method.", echo=TRUE, dependson='holtmodel'}
 autoplot(fc) +
   xlab("Year") + ylab("Livestock, sheep in Asia (millions)")
 ```
 
 The resulting forecasts look sensible with increasing trend, and relatively wide prediction intervals reflecting the variation in the historical data. The prediction intervals are calculated using the methods described in Section \@ref(ets).
 
+In this example, the process of selecting a method was relatively easy as both MSE and MAE comparisons suggested the same method (damped Holt's). However, sometimes different accuracy measures will suggest different forecasting methods, and then a decision is required as to which forecasting method we prefer to use. As forecasting tasks can vary by many dimensions (length of forecast horizon, size of test set, forecast error measures, frequency of data, etc.), it is unlikely that one method will be better than all others for all forecasting scenarios. What we require from a forecasting method are consistently sensible forecasts, and these should be frequently evaluated against the task at hand. 
 
 ##Holt-Winters' seasonal method {#holt-winters}
 
