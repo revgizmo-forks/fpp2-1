@@ -28,8 +28,8 @@ autoplot(fc)
 ```
 
 ```{r gasstop, include=FALSE, dependson="gasweekly"}
-if(length(coef(bestfit)) - 2L*bestK != 3L)
-  stop("Gas model has changed")
+# if(length(coef(bestfit)) - 2L*bestK != 3L)
+#   stop("Gas model has changed")
 ```
 
 The fitted model has `r bestK` pairs of Fourier terms and can be written as

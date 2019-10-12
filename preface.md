@@ -1,10 +1,9 @@
 ---
-knit: "bookdown::render_book"
 title: "Forecasting: Principles&nbsp;and&nbsp;Practice"
 author: 
   name: "Rob J Hyndman and George Athanasopoulos"
   affiliation: Monash University, Australia
-output: bookdown::pdf_book
+output: pdf_document
 documentclass: book
 bibliography: [FPP.bib]
 biblio-style: apalike
@@ -18,9 +17,7 @@ cover-image: fppcover.jpg
 
 # Preface {-}
 
-```{r, echo=FALSE, out.width="50%", out.extra = 'style="float:right;padding-left:20px;"'}
-knitr::include_graphics("fpp2_cover.jpg")
-```
+<img src="fpp2_cover.jpg" width="50%" style="float:right;padding-left:20px;" />
 
 Welcome to our online textbook on forecasting.  This textbook is intended to provide a comprehensive introduction to forecasting methods and to present enough information about each method for readers to be able to use them sensibly. We don't attempt to give a thorough discussion of the theoretical details behind each method, although the references at the end of each chapter will fill in many of those details.
 
@@ -67,5 +64,5 @@ Happy forecasting!
 Rob J Hyndman<br>
 George Athanasopoulos
 
-`r format(Sys.time(), "%B %Y")`
+October 2019
 

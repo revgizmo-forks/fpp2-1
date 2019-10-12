@@ -1,3 +1,14 @@
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  latex_engine: pdflatex
+  citation_package: natbib
+  keep_tex: yes
+  pandoc_args: --chapters
+  toc_depth: 2
+  toc_unnumbered: yes
+  fig_height: 4.2
+  fig_width: 6.5
 bookdown::gitbook:
   css: style.css
   config:
@@ -16,16 +27,4 @@ bookdown::gitbook:
   fig_caption: yes
   fig_height: 5.3
   fig_width: 8.5
-bookdown::pdf_book:
-  includes:
-    in_header: preamble.tex
-  latex_engine: pdflatex
-  citation_package: natbib
-  dev: "cairo_pdf"
-  keep_tex: yes
-  pandoc_args: --chapters
-  toc_depth: 2
-  toc_unnumbered: yes
-  fig_height: 4.2
-  fig_width: 6.5
 bookdown::epub_book: default

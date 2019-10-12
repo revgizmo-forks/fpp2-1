@@ -19,4 +19,4 @@ rmd_files: ["index.Rmd"
  ,"references.Rmd"
 ]
 output_dir: "public"
-delete_merged_file: true
+delete_merged_file: false

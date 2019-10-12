@@ -190,6 +190,16 @@ This scatterplot helps us to visualize the relationship between the variables. I
 
 When there are several potential predictor variables, it is useful to plot each variable against each other variable.  Consider the eight time series shown in Figure \@ref(fig:vntimeplots).
 
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+vn <- read.csv("Ch10Data/vn2.csv") 
+vn <- ts(vn, start = 1998, frequency = 4)[,1:8]
+# require(hts)
+# tourism.hts <- hts(vn, characters = c(3, 5)) 
+# # I keep vn2 here as we will only use this line when we add vn2 in the fpp2 package
+
+```
+
+
 ```{r vntimeplots, fig.cap="Quarterly visitor nights for various regions of Australia.", fig.asp=1}
 autoplot(vn, facets=TRUE) +
   ylab("Number of visitor nights each quarter")
