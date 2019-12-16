@@ -14,6 +14,7 @@ description: "2nd edition"
 url: 'http\://Otexts.org/fpp2/'
 twitter-handle: robjhyndman
 cover-image: fppcover.jpg
+before_chapter_script: ["before-each-chapter.R"]
 ---
 
 # Preface {-}
